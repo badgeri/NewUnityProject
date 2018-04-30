@@ -12,7 +12,8 @@ public class Jumping : MonoBehaviour {
     /// <summary>
     /// Update
     /// </summary>
-	void Update () {
+	void Update ()
+    {
         if (Input.GetKey(KeyCode.Space))
         {
             Jump();
@@ -22,11 +23,13 @@ public class Jumping : MonoBehaviour {
     /// <summary>
     /// Jump method
     /// </summary>
-    public void Jump() {
+    public void Jump()
+    {
         if (getTouchingGround())
         {
             Rigidbody rb = GetComponent<Rigidbody>();
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + 10, rb.velocity.z);
+            mTouchingGround = false;
         }
     }
 
@@ -34,7 +37,8 @@ public class Jumping : MonoBehaviour {
     /// Set touching ground - ball can only jump if it is touching the ground.
     /// </summary>
     /// <param name="isTouchingGround"></param>
-    public void setTouchingGround(bool isTouchingGround) {
+    public void setTouchingGround(bool isTouchingGround)
+    {
         mTouchingGround = isTouchingGround;
     }
 

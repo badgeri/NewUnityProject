@@ -11,7 +11,8 @@ public class OnCollision : MonoBehaviour {
     /// Entering collision.
     /// </summary>
     /// <param name="collision"></param>
-    void OnCollisionEnter (Collision collision) {
+    void OnCollisionEnter (Collision collision)
+    {
         if (collision.gameObject.tag == "Plane")
         {
             GetComponent<Jumping>().setTouchingGround(true);

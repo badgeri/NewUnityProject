@@ -15,7 +15,8 @@ public class PlayerBallTests {
     /// </summary>
     /// <returns></returns>    
     [UnityTest]
-    public IEnumerator _CanSceneBeLoaded() { 
+    public IEnumerator _CanSceneBeLoaded()
+    { 
         Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
@@ -27,7 +28,8 @@ public class PlayerBallTests {
     /// </summary>
     /// <returns></returns>
     [UnityTest]
-	public IEnumerator _InitiatePlayerBall() {
+	public IEnumerator _InitiatePlayerBall()
+    {
         Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
@@ -66,7 +68,7 @@ public class PlayerBallTests {
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         Assert.True(playerBall.GetComponent<Jumping>().getTouchingGround());
     }
 
@@ -82,7 +84,7 @@ public class PlayerBallTests {
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         float restingY = playerBall.transform.position.y;
         playerBall.GetComponent<Jumping>().Jump();
         yield return new WaitForSeconds(0.5f);
@@ -107,5 +109,79 @@ public class PlayerBallTests {
         Assert.Less(playerBall.transform.position.y, initY);
     }
 
+    /// <summary>
+    /// Verify that move left works for Player ball.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator _PlayerBallMoveLeft()
+    {
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
+        yield return loadSceneAsync;
+        Debug.Log("Loading complete");
+        var playerBall = GameObject.FindWithTag("Player");
+        yield return new WaitForSeconds(1);
+        float initX = playerBall.transform.position.x;
+        playerBall.GetComponent<Movement>().MoveLeft();
+        yield return new WaitForSeconds(0.5f);
+        Assert.Less(playerBall.transform.position.x, initX);
+    }
 
+    /// <summary>
+    /// Verify that move right works for Player ball.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator _PlayerBallMoveRight()
+    {
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
+        yield return loadSceneAsync;
+        Debug.Log("Loading complete");
+        var playerBall = GameObject.FindWithTag("Player");
+        yield return new WaitForSeconds(1);
+        float initX = playerBall.transform.position.x;
+        playerBall.GetComponent<Movement>().MoveRight();
+        yield return new WaitForSeconds(0.5f);
+        Assert.Less(initX, playerBall.transform.position.x);
+    }
+
+    /// <summary>
+    /// Verify that move up works for Player ball.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator _PlayerBallMoveUp()
+    {
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
+        yield return loadSceneAsync;
+        Debug.Log("Loading complete");
+        var playerBall = GameObject.FindWithTag("Player");
+        yield return new WaitForSeconds(1);
+        float initZ = playerBall.transform.position.z;
+        playerBall.GetComponent<Movement>().MoveUp();
+        yield return new WaitForSeconds(0.5f);
+        Assert.Less(initZ, playerBall.transform.position.z);
+    }
+
+    /// <summary>
+    /// Verify that move down works for Player ball.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator _PlayerBallMoveDown()
+    {
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
+        yield return loadSceneAsync;
+        Debug.Log("Loading complete");
+        var playerBall = GameObject.FindWithTag("Player");
+        yield return new WaitForSeconds(1);
+        float initZ = playerBall.transform.position.z;
+        playerBall.GetComponent<Movement>().MoveDown();
+        yield return new WaitForSeconds(0.5f);
+        Assert.Less(playerBall.transform.position.z, initZ);
+    }
 }
