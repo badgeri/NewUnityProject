@@ -184,4 +184,59 @@ public class PlayerBallTests {
         yield return new WaitForSeconds(0.5f);
         Assert.Less(playerBall.transform.position.z, initZ);
     }
+
+    /// <summary>
+    /// Verify that max velocity for Player ball is not exceeded.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator _PlayerBallMaxVelocity()
+    {
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
+        yield return loadSceneAsync;
+        Debug.Log("Loading complete");
+        var playerBall = GameObject.FindWithTag("Player");
+        yield return new WaitForSeconds(1);
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        Assert.AreEqual(Mathf.Abs(playerBall.GetComponent<Rigidbody>().velocity.z), Mathf.Abs(playerBall.GetComponent<Movement>().GetMinVelocity()), 0.01);
+    }
+
+    /// <summary>
+    /// Verify that Player ball does not slow down.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator _PlayerBallConstantVelocity()
+    {
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
+        yield return loadSceneAsync;
+        Debug.Log("Loading complete");
+        var playerBall = GameObject.FindWithTag("Player");
+        yield return new WaitForSeconds(1);
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        playerBall.GetComponent<Movement>().MoveDown();
+        yield return new WaitForSeconds(2f);
+        Assert.AreEqual(Mathf.Abs(playerBall.GetComponent<Rigidbody>().velocity.z), Mathf.Abs(playerBall.GetComponent<Movement>().GetMinVelocity()), 0.01);
+    }
 }

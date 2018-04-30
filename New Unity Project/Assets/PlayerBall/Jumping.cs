@@ -10,7 +10,7 @@ public class Jumping : MonoBehaviour {
     private bool mTouchingGround = false;
 
     /// <summary>
-    /// Update
+    /// Gametick
     /// </summary>
 	void Update ()
     {
