@@ -33,7 +33,7 @@ public class PlayerBallTests {
         var playerBall = GameObject.FindWithTag("Player");
         Assert.That(playerBall != null);
         float initY = playerBall.transform.position.y;
-        yield return null;
+        yield return new WaitForSeconds(0.5f);
         Assert.AreNotEqual(initY, playerBall.transform.position.y);
     }
 
@@ -44,12 +44,8 @@ public class PlayerBallTests {
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
-        var playerBall = GameObject.FindWithTag("Player");
-        var plane = GameObject.FindWithTag("Plane");
-        
-        Assert.That(playerBall != null);
-        float initY = playerBall.transform.position.y;
-        yield return null;
-        Assert.AreNotEqual(initY, playerBall.transform.position.y);
+
+        yield return new WaitForSeconds(2);
+        LogAssert.Expect(LogType.Log, "Collision with plane");
     }
 }
