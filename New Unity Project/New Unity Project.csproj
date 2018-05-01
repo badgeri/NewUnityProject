@@ -236,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Camera\CameraMovement.cs" />
+    <Compile Include="Assets\PlayerBall\Death.cs" />
     <Compile Include="Assets\PlayerBall\Jumping.cs" />
     <Compile Include="Assets\PlayerBall\Movement.cs" />
     <Compile Include="Assets\PlayerBall\OnCollision.cs" />

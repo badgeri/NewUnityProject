@@ -18,6 +18,9 @@ public class CameraMovement : MonoBehaviour {
 	void LateUpdate () {
         //Main camera follows the Player ball.
         var playerBall = GameObject.FindWithTag("Player");
-        transform.position = new Vector3(playerBall.transform.position.x, playerBall.transform.position.y + 20, playerBall.transform.position.z - 20);
+        if (playerBall)
+        {
+            transform.position = new Vector3(playerBall.transform.position.x, playerBall.transform.position.y + 20, playerBall.transform.position.z - 20);
+        }
 	}
 }

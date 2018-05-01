@@ -239,4 +239,21 @@ public class PlayerBallTests {
         yield return new WaitForSeconds(2f);
         Assert.AreEqual(Mathf.Abs(playerBall.GetComponent<Rigidbody>().velocity.z), Mathf.Abs(playerBall.GetComponent<Movement>().GetMinVelocity()), 0.01);
     }
+
+    /// <summary>
+    /// Verify that Player ball is destroyed when below plane.
+    /// </summary>
+    /// <returns></returns>
+    [UnityTest]
+    public IEnumerator _PlayerBallDestroyBelowPlane()
+    {
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
+        yield return loadSceneAsync;
+        Debug.Log("Loading complete");
+        var playerBall = GameObject.FindWithTag("Player");
+        playerBall.transform.position = new Vector3(-103, 4, 0);
+        yield return new WaitForSeconds(2);
+        Assert.True(playerBall.ToString() == "null");
+    }
 }
