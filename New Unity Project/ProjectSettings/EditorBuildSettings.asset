@@ -8,3 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/PlayerBallAndPlaneScene.unity
     guid: bdb3530176168024395832573c434035
+  - enabled: 1
+    path: Assets/MultipleEnemyBallAndPlaneScene.unity
+    guid: 3233b7529c33a4b49bfe89a6e3a3f142
+  - enabled: 1
+    path: Assets/MultipleBallAndPlaneScene.unity
+    guid: 25c958073719bc841910bad0d5f6bd4a

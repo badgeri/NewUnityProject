@@ -671,6 +671,7 @@ GameObject:
   - component: {fileID: 1635322891}
   - component: {fileID: 1635322887}
   - component: {fileID: 1635322888}
+  - component: {fileID: 1635322889}
   m_Layer: 0
   m_Name: EnemyBall
   m_TagString: Enemy
@@ -698,6 +699,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d419be4c0d66514dbc09645d1895470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1635322889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1635322886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 244349d175cf32f49930aea947b64d52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1635322891
