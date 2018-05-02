@@ -9,15 +9,14 @@ using System.Collections;
 /// </summary>
 public class PlayerBallTests {
 
-
     /// <summary>
     /// Verify that scene PlayerBallAndPlaneScene can be loaded.
     /// </summary>
     /// <returns></returns>    
     [UnityTest]
     public IEnumerator _CanSceneBeLoaded()
-    { 
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+    {
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -30,12 +29,12 @@ public class PlayerBallTests {
     [UnityTest]
 	public IEnumerator _InitiatePlayerBall()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
-        Assert.That(playerBall != null);
+        Assert.That(playerBall != null, "Player ball need to be initiated");
     }
 
     /// <summary>
@@ -45,15 +44,14 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _InitiatedPlayerBallFalling()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
-        Assert.That(playerBall != null);
         float initY = playerBall.transform.position.y;
         yield return new WaitForSeconds(0.5f);
-        Assert.AreNotEqual(initY, playerBall.transform.position.y);
+        Assert.AreNotEqual(initY, playerBall.transform.position.y, "Player ball should fall due to gravity.");
     }
 
     /// <summary>
@@ -63,13 +61,13 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _InitiatedPlayerBallFallingAndLandingOnPlane()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
-        yield return new WaitForSeconds(1);
-        Assert.True(playerBall.GetComponent<Jumping>().getTouchingGround());
+        yield return new WaitForSeconds(2);
+        Assert.True(playerBall.GetComponent<OnCollision>().getTouchingGround(), "Player ball should be touching ground.");
     }
 
     /// <summary>
@@ -79,7 +77,7 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallJumpOnPressSpace()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -88,7 +86,7 @@ public class PlayerBallTests {
         float restingY = playerBall.transform.position.y;
         playerBall.GetComponent<Jumping>().Jump();
         yield return new WaitForSeconds(0.5f);
-        Assert.AreNotEqual(restingY, playerBall.transform.position.y);
+        Assert.AreNotEqual(restingY, playerBall.transform.position.y, "Player ball should be above ground.");
     }
 
     /// <summary>
@@ -98,7 +96,7 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallDontJumpInAir()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -106,7 +104,7 @@ public class PlayerBallTests {
         float initY = playerBall.transform.position.y;
         playerBall.GetComponent<Jumping>().Jump();
         yield return new WaitForSeconds(0.5f);
-        Assert.Less(playerBall.transform.position.y, initY);
+        Assert.Less(playerBall.transform.position.y, initY, "Player ball should not be able to jump while airborn.");
     }
 
     /// <summary>
@@ -116,7 +114,7 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallMoveLeft()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -125,7 +123,7 @@ public class PlayerBallTests {
         float initX = playerBall.transform.position.x;
         playerBall.GetComponent<Movement>().MoveLeft();
         yield return new WaitForSeconds(0.5f);
-        Assert.Less(playerBall.transform.position.x, initX);
+        Assert.Less(playerBall.transform.position.x, initX, "Player ball should move left.");
     }
 
     /// <summary>
@@ -135,7 +133,7 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallMoveRight()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -144,7 +142,7 @@ public class PlayerBallTests {
         float initX = playerBall.transform.position.x;
         playerBall.GetComponent<Movement>().MoveRight();
         yield return new WaitForSeconds(0.5f);
-        Assert.Less(initX, playerBall.transform.position.x);
+        Assert.Less(initX, playerBall.transform.position.x, "Player ball should move right.");
     }
 
     /// <summary>
@@ -154,7 +152,7 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallMoveUp()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -163,7 +161,7 @@ public class PlayerBallTests {
         float initZ = playerBall.transform.position.z;
         playerBall.GetComponent<Movement>().MoveUp();
         yield return new WaitForSeconds(0.5f);
-        Assert.Less(initZ, playerBall.transform.position.z);
+        Assert.Less(initZ, playerBall.transform.position.z, "Player ball should move up.");
     }
 
     /// <summary>
@@ -173,7 +171,7 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallMoveDown()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -182,7 +180,7 @@ public class PlayerBallTests {
         float initZ = playerBall.transform.position.z;
         playerBall.GetComponent<Movement>().MoveDown();
         yield return new WaitForSeconds(0.5f);
-        Assert.Less(playerBall.transform.position.z, initZ);
+        Assert.Less(playerBall.transform.position.z, initZ, "Player ball should move down.");
     }
 
     /// <summary>
@@ -192,7 +190,7 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallMaxVelocity()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -209,7 +207,7 @@ public class PlayerBallTests {
         playerBall.GetComponent<Movement>().MoveDown();
         playerBall.GetComponent<Movement>().MoveDown();
         playerBall.GetComponent<Movement>().MoveDown();
-        Assert.AreEqual(Mathf.Abs(playerBall.GetComponent<Rigidbody>().velocity.z), Mathf.Abs(playerBall.GetComponent<Movement>().GetMinVelocity()), 0.01);
+        Assert.AreEqual(Mathf.Abs(playerBall.GetComponent<Rigidbody>().velocity.z), Mathf.Abs(playerBall.GetComponent<Movement>().GetMinVelocity()), 0.01, "Player ball max velocity should not be exceeded");
     }
 
     /// <summary>
@@ -219,7 +217,7 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallConstantVelocity()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -237,7 +235,7 @@ public class PlayerBallTests {
         playerBall.GetComponent<Movement>().MoveDown();
         playerBall.GetComponent<Movement>().MoveDown();
         yield return new WaitForSeconds(2f);
-        Assert.AreEqual(Mathf.Abs(playerBall.GetComponent<Rigidbody>().velocity.z), Mathf.Abs(playerBall.GetComponent<Movement>().GetMinVelocity()), 0.01);
+        Assert.AreEqual(Mathf.Abs(playerBall.GetComponent<Rigidbody>().velocity.z), Mathf.Abs(playerBall.GetComponent<Movement>().GetMinVelocity()), 0.01, "Player ball should not slow down.");
     }
 
     /// <summary>
@@ -247,13 +245,13 @@ public class PlayerBallTests {
     [UnityTest]
     public IEnumerator _PlayerBallDestroyBelowPlane()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
         playerBall.transform.position = new Vector3(-103, 4, 0);
         yield return new WaitForSeconds(2);
-        Assert.True(playerBall.ToString() == "null");
+        Assert.True(playerBall.ToString() == "null", "Player ball should not exist");
     }
 }

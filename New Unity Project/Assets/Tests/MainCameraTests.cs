@@ -15,17 +15,17 @@ public class MainCameraTests {
     [UnityTest]
     public IEnumerator _CameraAndPlayerBallMoveLeft()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
         var mainCamera = GameObject.FindWithTag("MainCamera");
         yield return new WaitForSeconds(1);
-        Assert.AreEqual(playerBall.transform.position.x, mainCamera.transform.position.x, 0.05);
+        Assert.AreEqual(playerBall.transform.position.x, mainCamera.transform.position.x, 0.05, "Camera should be locked to player ball.");
         playerBall.GetComponent<Movement>().MoveLeft();
         yield return new WaitForSeconds(3f);
-        Assert.AreEqual(playerBall.transform.position.x, mainCamera.transform.position.x, 0.05);
+        Assert.AreEqual(playerBall.transform.position.x, mainCamera.transform.position.x, 0.05, "Camera should be locked to player ball while moving.");
     }
 
     /// <summary>
@@ -35,17 +35,17 @@ public class MainCameraTests {
     [UnityTest]
     public IEnumerator _CameraAndPlayerBallMoveRight()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
         var mainCamera = GameObject.FindWithTag("MainCamera");
         yield return new WaitForSeconds(1);
-        Assert.AreEqual(playerBall.transform.position.x, mainCamera.transform.position.x, 0.05);
+        Assert.AreEqual(playerBall.transform.position.x, mainCamera.transform.position.x, 0.05, "Camera should be locked to player ball.");
         playerBall.GetComponent<Movement>().MoveRight();
         yield return new WaitForSeconds(3f);
-        Assert.AreEqual(playerBall.transform.position.x, mainCamera.transform.position.x, 0.05);
+        Assert.AreEqual(playerBall.transform.position.x, mainCamera.transform.position.x, 0.05, "Camera should be locked to player ball while moving.");
     }
 
     /// <summary>
@@ -55,17 +55,17 @@ public class MainCameraTests {
     [UnityTest]
     public IEnumerator _CameraAndPlayerBallMoveUp()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
         var mainCamera = GameObject.FindWithTag("MainCamera");
         yield return new WaitForSeconds(1);
-        Assert.AreEqual(playerBall.transform.position.z, mainCamera.transform.position.z + 20, 0.05);
+        Assert.AreEqual(playerBall.transform.position.z, mainCamera.transform.position.z + 20, 0.05, "Camera should be locked to player ball.");
         playerBall.GetComponent<Movement>().MoveUp();
         yield return new WaitForSeconds(3f);
-        Assert.AreEqual(playerBall.transform.position.z, mainCamera.transform.position.z + 20, 0.05);
+        Assert.AreEqual(playerBall.transform.position.z, mainCamera.transform.position.z + 20, 0.05, "Camera should be locked to player ball while moving.");
     }
 
     /// <summary>
@@ -75,17 +75,17 @@ public class MainCameraTests {
     [UnityTest]
     public IEnumerator _CameraAndPlayerBallMoveDown()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
         var playerBall = GameObject.FindWithTag("Player");
         var mainCamera = GameObject.FindWithTag("MainCamera");
         yield return new WaitForSeconds(1);
-        Assert.AreEqual(playerBall.transform.position.z, mainCamera.transform.position.z + 20, 0.05);
+        Assert.AreEqual(playerBall.transform.position.z, mainCamera.transform.position.z + 20, 0.05, "Camera should be locked to player ball.");
         playerBall.GetComponent<Movement>().MoveDown();
         yield return new WaitForSeconds(3f);
-        Assert.AreEqual(playerBall.transform.position.z, mainCamera.transform.position.z + 20, 0.05);
+        Assert.AreEqual(playerBall.transform.position.z, mainCamera.transform.position.z + 20, 0.05, "Camera should be locked to player ball while moving.");
     }
 
     /// <summary>
@@ -95,7 +95,7 @@ public class MainCameraTests {
     [UnityTest]
     public IEnumerator _CameraDontRotateWhenPlayerBallMove()
     {
-        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"));
+        Assert.True(Application.CanStreamedLevelBeLoaded("PlayerBallAndPlaneScene"), "Level could not be loaded.");
         AsyncOperation loadSceneAsync = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("PlayerBallAndPlaneScene");
         yield return loadSceneAsync;
         Debug.Log("Loading complete");
@@ -105,29 +105,29 @@ public class MainCameraTests {
         var cameraRotation = mainCamera.transform.rotation;
         playerBall.GetComponent<Movement>().MoveDown();
         yield return new WaitForSeconds(1f);
-        Assert.AreEqual(cameraRotation.x, mainCamera.transform.rotation.x, 0.01);
-        Assert.AreEqual(cameraRotation.y, mainCamera.transform.rotation.y, 0.01);
-        Assert.AreEqual(cameraRotation.z, mainCamera.transform.rotation.z, 0.01);
-        Assert.AreEqual(cameraRotation.w, mainCamera.transform.rotation.w, 0.01);
+        Assert.AreEqual(cameraRotation.x, mainCamera.transform.rotation.x, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.y, mainCamera.transform.rotation.y, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.z, mainCamera.transform.rotation.z, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.w, mainCamera.transform.rotation.w, 0.01, "Camera rotation should be static");
         playerBall.GetComponent<Movement>().MoveUp();
         playerBall.GetComponent<Movement>().MoveUp();
         yield return new WaitForSeconds(1f);
-        Assert.AreEqual(cameraRotation.x, mainCamera.transform.rotation.x, 0.01);
-        Assert.AreEqual(cameraRotation.y, mainCamera.transform.rotation.y, 0.01);
-        Assert.AreEqual(cameraRotation.z, mainCamera.transform.rotation.z, 0.01);
-        Assert.AreEqual(cameraRotation.w, mainCamera.transform.rotation.w, 0.01);
+        Assert.AreEqual(cameraRotation.x, mainCamera.transform.rotation.x, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.y, mainCamera.transform.rotation.y, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.z, mainCamera.transform.rotation.z, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.w, mainCamera.transform.rotation.w, 0.01, "Camera rotation should be static");
         playerBall.GetComponent<Movement>().MoveRight();
         yield return new WaitForSeconds(1f);
-        Assert.AreEqual(cameraRotation.x, mainCamera.transform.rotation.x, 0.01);
-        Assert.AreEqual(cameraRotation.y, mainCamera.transform.rotation.y, 0.01);
-        Assert.AreEqual(cameraRotation.z, mainCamera.transform.rotation.z, 0.01);
-        Assert.AreEqual(cameraRotation.w, mainCamera.transform.rotation.w, 0.01);
+        Assert.AreEqual(cameraRotation.x, mainCamera.transform.rotation.x, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.y, mainCamera.transform.rotation.y, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.z, mainCamera.transform.rotation.z, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.w, mainCamera.transform.rotation.w, 0.01, "Camera rotation should be static");
         playerBall.GetComponent<Movement>().MoveLeft();
         playerBall.GetComponent<Movement>().MoveLeft();
         yield return new WaitForSeconds(1f);
-        Assert.AreEqual(cameraRotation.x, mainCamera.transform.rotation.x, 0.01);
-        Assert.AreEqual(cameraRotation.y, mainCamera.transform.rotation.y, 0.01);
-        Assert.AreEqual(cameraRotation.z, mainCamera.transform.rotation.z, 0.01);
-        Assert.AreEqual(cameraRotation.w, mainCamera.transform.rotation.w, 0.01);
+        Assert.AreEqual(cameraRotation.x, mainCamera.transform.rotation.x, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.y, mainCamera.transform.rotation.y, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.z, mainCamera.transform.rotation.z, 0.01, "Camera rotation should be static");
+        Assert.AreEqual(cameraRotation.w, mainCamera.transform.rotation.w, 0.01, "Camera rotation should be static");
     }
 }

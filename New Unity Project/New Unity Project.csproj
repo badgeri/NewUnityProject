@@ -241,6 +241,7 @@
     <Compile Include="Assets\PlayerBall\Jumping.cs" />
     <Compile Include="Assets\PlayerBall\Movement.cs" />
     <Compile Include="Assets\PlayerBall\OnCollision.cs" />
+    <Compile Include="Assets\Tests\EnemyBallTests.cs" />
     <Compile Include="Assets\Tests\MainCameraTests.cs" />
     <Compile Include="Assets\Tests\PlayerBallTests.cs" />
   </ItemGroup>

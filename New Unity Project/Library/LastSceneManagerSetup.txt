@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/MultipleBallAndPlaneScene.unity
+- path: Assets/PlayerBallAndPlaneScene.unity
   isLoaded: 1
   isActive: 1
