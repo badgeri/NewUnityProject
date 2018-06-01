@@ -1,4 +1,9 @@
 *.bin
-*/Build/*
+*/Builds/*
+*/Library/*
+*/Temp/*
 
 *metaData*
+*.meta
+*.sw[po]
+
