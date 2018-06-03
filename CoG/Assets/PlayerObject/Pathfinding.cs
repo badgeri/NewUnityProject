@@ -9,14 +9,20 @@ public class Pathfinding : MonoBehaviour {
 	Playground grid;
 
 	void Update(){
-		FindPath(seeker.position, target.position);
+		print(Input.inputString);
+		if( Input.GetButtonDown("Jump")){
+			print("find path");
+			FindPath(seeker.position, target.position);
+			print("found path");
+			print(grid.path);
+		}
 	}
 
 	void Awake (){
 		grid = GetComponent<Playground>();
 	}
 	void FindPath (Vector3 startPos, Vector3 targetPos) {
-		StopWatch sw = new StopWatch();
+		Stopwatch sw = new Stopwatch();
 		sw.Start();
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
@@ -38,7 +44,7 @@ public class Pathfinding : MonoBehaviour {
 
 			if( currentNode == targetNode){
 				sw.Stop();
-				print("Elipsed time was " + sw.ElipsedMilliseconds + " ms");
+				print("Elipsed time was " + sw.ElapsedMilliseconds + " ms");
 				RetracePath(startNode, targetNode);
 				return;
 			}
@@ -64,6 +70,7 @@ public class Pathfinding : MonoBehaviour {
 	}
 
 	void RetracePath(Node startNode, Node endNode){
+		print("RetracePath");
 		List<Node> path = new List<Node>();	
 		Node currentNode = endNode;
 		while ( currentNode != startNode){

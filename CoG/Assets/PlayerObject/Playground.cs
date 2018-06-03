@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Playground : MonoBehaviour {
+	public bool pathOnly;
 	public LayerMask unWalkableMask;
 	public Vector2 gridWorldSize;
 	public float nodeRadius;
@@ -21,15 +22,26 @@ public class Playground : MonoBehaviour {
 
 	public List<Node> path;
 	void OnDrawGizmos(){
-		Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
-		if( grid != null) {
-			foreach (Node n in grid) {
-				Gizmos.color = (n.walkable)?Color.white:Color.red;
-				if( path != null){
-					if( path.Contains(n))
-						Gizmos.color = Color.black;
+		if( pathOnly ){
+			if( path != null) {
+				foreach (Node n in path) {
+					print("for Each node");
+					Gizmos.color = Color.black;
+					Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
 				}
-				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
+			}
+		}
+		else {
+			Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
+			if( grid != null) {
+				foreach (Node n in grid) {
+					Gizmos.color = (n.walkable)?Color.white:Color.red;
+					if( path != null){
+						if( path.Contains(n))
+							Gizmos.color = Color.black;
+					}
+					Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
+				}
 			}
 		}
 	}
@@ -56,12 +68,7 @@ public class Playground : MonoBehaviour {
 			{
 				Vector3 worldPoint = worldLeftBottom + Vector3.right*(x*nodeDiameter + nodeRadius) + Vector3.forward*(y*nodeDiameter + nodeRadius);
 				bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unWalkableMask));
-				if(!walkable){
-					print("print walkable");
-					print(walkable);
-				}
 				grid[x,y] = new Node(walkable, worldPoint, x, y);
-
 			}
 		}
 	}
