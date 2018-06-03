@@ -3,6 +3,9 @@
 */Library/*
 */Temp/*
 
+*.txt
+*.asset
+*.csproj
 *metaData*
 *.meta
 *.sw[po]
