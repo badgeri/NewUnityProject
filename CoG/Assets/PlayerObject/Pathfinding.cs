@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Diagnostics;
 
 public class Pathfinding : MonoBehaviour {
 
@@ -15,6 +16,8 @@ public class Pathfinding : MonoBehaviour {
 		grid = GetComponent<Playground>();
 	}
 	void FindPath (Vector3 startPos, Vector3 targetPos) {
+		StopWatch sw = new StopWatch();
+		sw.Start();
 		Node startNode = grid.NodeFromWorldPoint(startPos);
 		Node targetNode = grid.NodeFromWorldPoint(targetPos);
 		List<Node> openSet = new List<Node>();
@@ -34,6 +37,8 @@ public class Pathfinding : MonoBehaviour {
 			closedSet.Add(currentNode);
 
 			if( currentNode == targetNode){
+				sw.Stop();
+				print("Elipsed time was " + sw.ElipsedMilliseconds + " ms");
 				RetracePath(startNode, targetNode);
 				return;
 			}
