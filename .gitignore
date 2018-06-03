@@ -6,4 +6,5 @@
 *metaData*
 *.meta
 *.sw[po]
+*.cache
 
