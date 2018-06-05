@@ -8,6 +8,7 @@ public class Node : IHeapItem<Node>{
 	public int gridX, gridY; // the grid position of the current node;
 	public int gCost, hCost;
 	public Node parent; 
+	int heapIndex;
 
 	public Node(bool _walkable, Vector3 _worldPosition, int _gridX, int _gridY){
 		walkable = _walkable;
@@ -23,8 +24,8 @@ public class Node : IHeapItem<Node>{
 
 	//implement the interface IHeapItem for Node
 	public int HeapIndex{
-		get { return HeapIndex; }
-		set { HeapIndex = value; }
+		get { return heapIndex; }
+		set { heapIndex = value; }
 	}
 
 	//return one if the current item has higher priority than nodeToCompareTo
@@ -32,7 +33,7 @@ public class Node : IHeapItem<Node>{
 		int compare = nodeToCompareTo.fCost.CompareTo(fCost);
 		if ( compare == 0) 
 			compare = nodeToCompareTo.hCost.CompareTo(hCost);
-		return compare; //negative since a low [fh]Cost is better
+		return compare; 
 	}
 }
 

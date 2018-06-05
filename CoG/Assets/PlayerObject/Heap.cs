@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 public class Heap<T> where T: IHeapItem<T> {
-	public int heapMaxSize;
+
 	int currentItemCount;
 	T[] items;
 	
@@ -49,14 +49,23 @@ public class Heap<T> where T: IHeapItem<T> {
 
 		if ( childIndexLeft < currentItemCount){
 			swapIndex = childIndexLeft;
-			if (childIndexRight < currentItemCount)
-				if (items[childIndexLeft].CompareTo(items[childIndexRight]) < 0)
+
+			if (childIndexRight < currentItemCount) {
+				if (items[childIndexLeft].CompareTo(items[childIndexRight]) < 0) {
 					swapIndex = childIndexRight;
-			if (item.CompareTo(items[swapIndex]) < 0 )
+				}
+			}
+
+			if (item.CompareTo(items[swapIndex]) < 0 ) {
 				Swap(item, items[swapIndex]);
-			else return;
+			}
+			else {
+				return;
+			}
 		}
-		else return;
+		else {
+			return;
+		}
 	}
 
 	void SortUp(T item){
@@ -66,6 +75,8 @@ public class Heap<T> where T: IHeapItem<T> {
 			if (item.CompareTo(parentItem) > 0 ){
 				Swap(item, parentItem);	
 			}
+			else break;
+			parentIndex = (item.HeapIndex-1)/2;
 		}
 	}
 

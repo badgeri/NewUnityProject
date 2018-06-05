@@ -9,18 +9,19 @@ public class Pathfinding : MonoBehaviour {
 	Playground grid;
 
 	void Update(){
-		print(Input.inputString);
-		if( Input.GetButtonDown("Jump")){
-			print("find path");
+		print("mouse pressed " + Input.GetMouseButton(0));
+		if(Input.GetMouseButton(0)){
 			FindPath(seeker.position, target.position);
-			print("found path");
-			print(grid.path);
 		}
+	}
+	private IEnumerator my_waiter(){
+			yield return new WaitForSeconds(4000);
 	}
 
 	void Awake (){
 		grid = GetComponent<Playground>();
 	}
+
 	void FindPath (Vector3 startPos, Vector3 targetPos) {
 		Stopwatch sw = new Stopwatch();
 		sw.Start();
@@ -36,7 +37,6 @@ public class Pathfinding : MonoBehaviour {
 			for ( int i = 1; i < openSet.Count; i++) {
 				if( openSet[i].fCost < currentNode.fCost || openSet[i].fCost == currentNode.fCost && openSet[i].hCost < currentNode.hCost) {
 					currentNode = openSet[i];
-					
 				}
 			}
 			openSet.Remove(currentNode);
@@ -54,23 +54,20 @@ public class Pathfinding : MonoBehaviour {
 					continue;
 				}
 
-				int newMovementCostToNeighbour = currentNode.gCost + getDistance(currentNode, neighbour);
+				int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour);
 				if( newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
 					neighbour.gCost = newMovementCostToNeighbour;
-					neighbour.hCost = getDistance(neighbour, targetNode);
+					neighbour.hCost = GetDistance(neighbour, targetNode);
 					neighbour.parent = currentNode;
 
 					if( !openSet.Contains(neighbour)) 
 						openSet.Add(neighbour);
-				
 				}
 			}
 		}
-		
 	}
 
 	void RetracePath(Node startNode, Node endNode){
-		print("RetracePath");
 		List<Node> path = new List<Node>();	
 		Node currentNode = endNode;
 		while ( currentNode != startNode){
@@ -82,7 +79,7 @@ public class Pathfinding : MonoBehaviour {
 	}
 
 	
-	int getDistance(Node nodeA, Node nodeB){
+	int GetDistance(Node nodeA, Node nodeB){
 		int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
 		int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
 
