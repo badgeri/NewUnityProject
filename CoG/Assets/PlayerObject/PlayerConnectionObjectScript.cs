@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerConnectionObject : NetworkBehaviour {
+public class PlayerConnectionObjectScript : NetworkBehaviour {
+    public GameObject PlayerUnitPrefab;
 
-	// Use this for initialization
-	void Start () {
+    [SyncVar]
+    public int Money;
+
+
+    // Use this for initialization
+    void Start () {
 
         //Is this actually my own local PlayerConnectionObject?
         if ( isLocalPlayer == false ) {
@@ -19,9 +24,9 @@ public class PlayerConnectionObject : NetworkBehaviour {
 
         // Command the server to spawn my unit
         CmdSpawnMyUnit();
+        CmdSetMoney(0);
 	}
 
-    public GameObject PlayerUnitPrefab;
 
     //SyncVars are variables where if their value changes on the SERVER, then all clients are automatically informed of the new value.
     //[SyncVar(hook="OnPlayerNameChanged")]
@@ -46,7 +51,12 @@ public class PlayerConnectionObject : NetworkBehaviour {
             Debug.Log("Sending the server a request to change our name to: " + n);
             CmdChangePlayerName(n);
         }
-	}
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            CmdSetMoney(100);
+        }
+    }
 
     
     void OnPlayerNameChanged(string newName) {
@@ -81,6 +91,11 @@ public class PlayerConnectionObject : NetworkBehaviour {
         PlayerName = n;
         //Tell all the clients what this player's name now is.
         RpcChangePlayerName(PlayerName);
+    }
+
+    [Command]
+    public void CmdSetMoney(int amount) {
+        Money = amount;
     }
 
 
