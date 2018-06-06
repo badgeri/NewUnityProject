@@ -1,0 +1,15 @@
+*.bin
+*/Builds/*
+*/Library/*
+*/Temp/*
+*.txt
+*.asset
+*.csproj
+*metaData*
+*.meta
+*.sw[po]
+*.cache
+*.suo
+*.ide-shm
+*.ide-wal
+*DesignTimeBuild*
