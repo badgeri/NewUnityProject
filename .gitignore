@@ -6,7 +6,6 @@
 *.asset
 *.csproj
 *metaData*
-*.meta
 *.sw[po]
 *.cache
 *.suo
