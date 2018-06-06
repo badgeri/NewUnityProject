@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerConnectionObject : NetworkBehaviour {
+public class PlayerConnectionObjectScript : NetworkBehaviour {
     public GameObject PlayerUnitPrefab;
 
     [SyncVar]
@@ -94,7 +94,7 @@ public class PlayerConnectionObject : NetworkBehaviour {
     }
 
     [Command]
-    void CmdSetMoney(int amount) {
+    public void CmdSetMoney(int amount) {
         Money = amount;
     }
 
