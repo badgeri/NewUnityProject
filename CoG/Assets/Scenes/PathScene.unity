@@ -517,8 +517,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5c43f4c60c44d24ab1ae0aa48c05309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seeker: {fileID: 1736050857}
-  target: {fileID: 469366711}
   grid: {fileID: 0}
 --- !u!1 &469366707
 GameObject:
@@ -876,7 +874,6 @@ GameObject:
   - component: {fileID: 1736050855}
   - component: {fileID: 1736050854}
   - component: {fileID: 1736050858}
-  - component: {fileID: 1736050859}
   m_Layer: 0
   m_Name: seeker
   m_TagString: Untagged
@@ -963,22 +960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5c43f4c60c44d24ab1ae0aa48c05309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seeker: {fileID: 1736050857}
-  target: {fileID: 469366711}
   grid: {fileID: 430182921}
---- !u!114 &1736050859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1736050853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: feb491c4198cf7749ade9bc64a1e5879, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  treshHold: 0
-  mMaxVelocity: 2
 --- !u!54 &1736050860
 Rigidbody:
   m_ObjectHideFlags: 0

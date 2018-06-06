@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
     public float treshHold;
-    private List<Node> path { get { return GetComponent<Pathfinding>().grid.path; } }
+    private Playground grid { get { return GetComponent<Pathfinding>().grid; } }
 
     private float mMaxVelocity = 0.5f;
     private float mCurrentVelocity = 0;
@@ -14,11 +14,11 @@ public class Movement : MonoBehaviour {
     // Update is called once per frame
     private void Update () {
 
-        if(path != null)
+        if(grid.path != null)
         {
-            UpdateTravelDirection(path);
+            UpdateTravelDirection(grid.path);
 
-            if(path.Count > 0) {
+            if(grid.path.Count > 0) {
                 CalculateAndUpdateVelocity(dirToNode1);
             }
             else {
@@ -77,6 +77,21 @@ public class Movement : MonoBehaviour {
     {
         direction = node.worldPosition - transform.position;
         direction.Normalize();
+    }
+    
+    private bool getNodeOfMouseClick(ref Node node)
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            //If the ray hits an object
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
+            {
+                node = grid.NodeFromWorldPoint(hit.point);
+                return true;
+            }
+        }
+        return false;
     }
     
     /// <summary>
