@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4908120129584858}
   - component: {fileID: 114449072591564380}
-  - component: {fileID: 114121226772061794}
+  - component: {fileID: 114782556019215626}
   m_Layer: 0
   m_Name: PlayerConnectionObject
   m_TagString: Untagged
@@ -41,21 +41,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114121226772061794
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1712504623528354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90862fb4d0244314a99ccf6763ee3731, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerUnitPrefab: {fileID: 1656871947632704, guid: a7e296d2ffd06c3468326d0f3b6f005b,
-    type: 2}
-  Money: 0
-  PlayerName: Anonymous
 --- !u!114 &114449072591564380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -70,21 +55,36 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 5
-    i1: 59
-    i2: 230
-    i3: 216
-    i4: 44
-    i5: 196
-    i6: 17
-    i7: 228
-    i8: 91
-    i9: 157
-    i10: 55
-    i11: 222
-    i12: 129
-    i13: 118
-    i14: 22
-    i15: 37
+    i0: 146
+    i1: 237
+    i2: 40
+    i3: 73
+    i4: 153
+    i5: 69
+    i6: 137
+    i7: 196
+    i8: 90
+    i9: 108
+    i10: 29
+    i11: 26
+    i12: 103
+    i13: 216
+    i14: 19
+    i15: 239
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114782556019215626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1712504623528354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd1c7136a6e1f074bbf5deec30f7ba7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerUnitPrefab: {fileID: 1656871947632704, guid: f45a2b8f66c33e840be6e4342d7d0047,
+    type: 2}
+  Money: 0
+  PlayerName: Anonymous
