@@ -3,24 +3,58 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour {
-
+    public float treshHold;
+    private List<Node> path { get { return GetComponent<Pathfinding>().grid.path; } }
 
     private float mMaxVelocity = 0.5f;
     private float mCurrentVelocity = 0;
-
-    // Use this for initialization
-    void Start () {
-    	
-    }
+    private Vector3 dirToNode1 = new Vector3();
+    private bool dirToNodeNeedUpdate = true;
 
     // Update is called once per frame
     private void Update () {
-        if (Input.GetMouseButton(0))
+
+        if(path != null)
         {
-            MoveTowardsPressedPoint();
+            UpdateTravelDirection(path);
+
+            if(path.Count > 0) {
+                CalculateAndUpdateVelocity(dirToNode1);
+            }
+            else {
+                GetComponent<Rigidbody>().velocity.Set(0, 0, 0);
+            }
         }
     }
 
+    /// <summary>
+    /// Returns  true if path[0].position is passed
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    private void UpdateTravelDirection(List<Node> path)
+    {
+        if (path.Count == 0) return;
+
+        Vector3 pathDir = new Vector3();
+        dirToNode1 = path[0].worldPosition - transform.position;
+        dirToNode1.Normalize();
+        if (path.Count > 1 && dirToNodeNeedUpdate)
+        {
+            pathDir = path[1].worldPosition - path[0].worldPosition;
+            pathDir.Normalize();
+        }
+
+        // if Dot < 0, vectors are in opposite direction, recalculate new direction
+        // meaning that we have past path[0] and need to aim for the next node in path
+        if ( Vector3.Dot(dirToNode1, pathDir) < 0)
+        {
+            path.RemoveAt(0);
+            UpdateTravelDirection(path);
+        }
+        print("current dif = " + (transform.position - path[0].worldPosition));
+        print("current vector " + pathDir);
+    }
 
     /// <summary>
     /// Move towards pressed point
@@ -34,6 +68,17 @@ public class Movement : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Get direction of mouse click
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    private void getDirectionToNode(ref Vector3 direction, Node node)
+    {
+        direction = node.worldPosition - transform.position;
+        direction.Normalize();
+    }
+    
     /// <summary>
     /// Get direction of mouse click
     /// </summary>

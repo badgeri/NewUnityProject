@@ -6,20 +6,16 @@ using System.Diagnostics;
 public class Pathfinding : MonoBehaviour {
 
 	public Transform seeker, target;
-	Playground grid;
+	public Playground grid;
 
 	void Update(){
-		print("mouse pressed " + Input.GetMouseButton(0));
-		if(Input.GetMouseButton(0)){
+        if (Input.GetMouseButton(0)) {
+            print("mouse pressed " + Input.GetMouseButton(0));
+            print("seeker positian " + seeker.position);
+            print("target positian " + target.position);
 			FindPath(seeker.position, target.position);
+            print("path = " + grid.path.Count);
 		}
-	}
-	private IEnumerator my_waiter(){
-			yield return new WaitForSeconds(4000);
-	}
-
-	void Awake (){
-		grid = GetComponent<Playground>();
 	}
 
 	void FindPath (Vector3 startPos, Vector3 targetPos) {
