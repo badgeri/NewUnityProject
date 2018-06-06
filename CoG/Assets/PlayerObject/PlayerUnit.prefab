@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114916488345418870}
   - component: {fileID: 114297861178670330}
   - component: {fileID: 54003194697796440}
-  - component: {fileID: 114374003042002456}
+  - component: {fileID: 114326995856835832}
   m_Layer: 0
   m_Name: PlayerUnit
   m_TagString: Untagged
@@ -90,7 +90,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 567bfa166a8401a40b449edc5330bc1d, type: 2}
+  - {fileID: 2100000, guid: 7c386faf305086d428732fecd6d3d62d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
---- !u!114 &114374003042002456
+--- !u!114 &114326995856835832
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1656871947632704}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b3df262fa01cd64fa5dc4bfea338254, type: 3}
+  m_Script: {fileID: 11500000, guid: a524fecae736e91409f93392d0e94eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114916488345418870
@@ -178,22 +178,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 69
-    i1: 142
-    i2: 180
-    i3: 9
-    i4: 83
-    i5: 127
-    i6: 203
-    i7: 196
-    i8: 106
-    i9: 104
-    i10: 10
-    i11: 254
-    i12: 145
-    i13: 45
-    i14: 177
-    i15: 213
+    i0: 167
+    i1: 226
+    i2: 150
+    i3: 210
+    i4: 255
+    i5: 208
+    i6: 108
+    i7: 52
+    i8: 104
+    i9: 50
+    i10: 109
+    i11: 15
+    i12: 59
+    i13: 111
+    i14: 0
+    i15: 91
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
 --- !u!135 &135401023976198310
