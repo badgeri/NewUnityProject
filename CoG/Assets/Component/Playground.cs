@@ -8,6 +8,7 @@ public class Playground : MonoBehaviour {
 	public LayerMask unWalkableMask;
 	public Vector2 gridWorldSize;
 	public float nodeRadius;
+	public float safeRadius;
 	Node[,] grid;
 	
 	float nodeDiameter;
@@ -69,7 +70,7 @@ public class Playground : MonoBehaviour {
 		for ( int x = 0; x < gridSizeX; x++) {
 			for ( int y = 0; y < gridSizeY; y++) {
 				Vector3 worldPoint = worldLeftBottom + Vector3.right*(x*nodeDiameter + nodeRadius) + Vector3.forward*(y*nodeDiameter + nodeRadius);
-				bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unWalkableMask));
+				bool walkable = !(Physics.CheckSphere(worldPoint, safeRadius, unWalkableMask));
 				grid[x,y] = new Node(walkable, worldPoint, x, y);
 			}
 		}
