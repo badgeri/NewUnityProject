@@ -7,10 +7,16 @@ using UnityEngine.Networking;
 
 public class PlayerUnit : NetworkBehaviour {
 
+    public int connectionId;
+
 	// Use this for initialization
 	void Start () {
 		
 	}
+
+    public void setConnectionId(int id) {
+        RpcSetConnectionId(id);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -28,4 +34,10 @@ public class PlayerUnit : NetworkBehaviour {
             Destroy(gameObject);
         }
 	}
+
+    [ClientRpc]
+    void RpcSetConnectionId(int id)
+    {
+        connectionId = id;
+    }
 }

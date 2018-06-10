@@ -160,8 +160,6 @@ public class Pathfinding : MonoBehaviour {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
             {
                 Vector3 g = hit.point;
-                Rigidbody rb = GetComponent<Rigidbody>();
-
                 var heading = hit.point - transform.position;
                 var distance = heading.magnitude;
                 direction = heading / distance;

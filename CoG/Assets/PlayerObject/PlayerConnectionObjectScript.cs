@@ -6,6 +6,10 @@ using UnityEngine.Networking;
 public class PlayerConnectionObjectScript : NetworkBehaviour {
     public GameObject PlayerUnitPrefab;
 
+    public int connectionId;
+
+    public string PlayerName = "Anonymous";
+
     [SyncVar]
     public int Money;
 
@@ -25,6 +29,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         // Command the server to spawn my unit
         CmdSpawnMyUnit();
         CmdSetMoney(0);
+        CmdSetConnectionId();
 	}
 
 
@@ -32,7 +37,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     //[SyncVar(hook="OnPlayerNameChanged")]
 
 
-    public string PlayerName = "Anonymous";
+    
 	
 	// Update is called once per frame
 	void Update () {
@@ -84,13 +89,12 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     [Command]
     void CmdChangePlayerName(string n) {
         Debug.Log("CmdChangePlayerName: " + n);
+        RpcChangePlayerName(n);
+    }
 
-        //Maybe check name is allowed.
-        //IF it isnt allowed, do we just ignore this request and do nothing? Or do we still call the RPC but with the original name?
-
-        PlayerName = n;
-        //Tell all the clients what this player's name now is.
-        RpcChangePlayerName(PlayerName);
+    [Command]
+    void CmdSetConnectionId() {
+        RpcSetConnectionId();
     }
 
     [Command]
@@ -107,5 +111,12 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     void RpcChangePlayerName(string n) {
         Debug.Log("RpcChangePlayerName: We were asked to change the player name on a particular PlayerConnectionObject" + n);
         PlayerName = n;
+    }
+
+    [ClientRpc]
+    void RpcSetConnectionId()
+    {
+        connectionId = GameObject.FindWithTag("ConnectionManager").GetComponent<ServerConnectionInformation>().getConnectionId();
+        PlayerUnitPrefab.GetComponent<PlayerUnit>().setConnectionId(connectionId);
     }
 }

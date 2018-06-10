@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Gold
   - Playground
+  - Playerobject
+  - NetworkManager
+  - ConnectionManager
   layers:
   - Default
   - TransparentFX
