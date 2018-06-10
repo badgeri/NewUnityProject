@@ -5,11 +5,17 @@ public class Pathfinding : MonoBehaviour {
 
 	public Playground grid;
 
-    private float mMaxVelocity = 0.5f;
+    private float mMaxVelocity = 10f;
     private float mCurrentVelocity = 0;
     private Vector3 dirToFirstNodeInPath = new Vector3();
 
-	void Update(){
+    // Use this for initialization
+    void Start()
+    {
+        grid = GameObject.FindWithTag("Playground").GetComponent<Playground>();
+    }
+
+    void Update(){
         if (Input.GetMouseButtonDown(0)) {
             Node n = getNodeOfMouseClick();
             if (n != null)
