@@ -13,8 +13,6 @@ public class OnCollision : MonoBehaviour
     /// <param name="collision"></param>
     void OnCollisionEnter(Collision collision)
     {
-        int i = 3;
-        i++;
     }
 
     /// <summary>

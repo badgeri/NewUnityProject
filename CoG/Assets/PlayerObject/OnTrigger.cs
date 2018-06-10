@@ -10,6 +10,7 @@ public class OnTrigger : MonoBehaviour {
         {
             var playerBall = GameObject.FindWithTag("Player");
             playerBall.GetComponent<PlayerConnectionObjectScript>().CmdSetMoney(200);
+            Destroy(colldier.gameObject);
         }
     }
 }
