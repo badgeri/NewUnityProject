@@ -9,6 +9,7 @@
 *.sw[po]
 *.cache
 *.suo
+*.ide
 *.ide-shm
 *.ide-wal
 *DesignTimeBuild*
