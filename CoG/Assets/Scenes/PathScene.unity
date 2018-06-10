@@ -209,12 +209,13 @@ GameObject:
   - component: {fileID: 106114860}
   - component: {fileID: 106114859}
   - component: {fileID: 106114858}
+  - component: {fileID: 106114861}
   m_Layer: 9
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &106114857
 Transform:
@@ -223,7 +224,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 106114856}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.44, y: 0.5, z: -2.375}
+  m_LocalPosition: {x: 0.44, y: -0, z: -2.375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 107093226}
@@ -283,6 +284,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 106114856}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &106114861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 106114856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74272252c98edd34c90d123df8782d6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onHold: 0
+  grid: {fileID: 430182921}
 --- !u!1 &107093222
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,14 +499,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38b21c92570eabf48b5061ff6a0124fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  pathOnly: 1
+  player: {fileID: 1736050857}
+  pathOnly: 0
   unWalkableMask:
     serializedVersion: 2
     m_Bits: 512
   gridWorldSize: {x: 30, y: 30}
   nodeRadius: 0.5
   safeRadius: 1
+  gridUpdated: 0
+  treshhold: 4
 --- !u!4 &430182922
 Transform:
   m_ObjectHideFlags: 0
@@ -517,7 +533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5c43f4c60c44d24ab1ae0aa48c05309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
+  grid: {fileID: 430182921}
 --- !u!1 &469366707
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,9 +717,9 @@ GameObject:
   - component: {fileID: 559298754}
   - component: {fileID: 559298753}
   - component: {fileID: 559298757}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

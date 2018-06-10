@@ -8,13 +8,19 @@ public class Pathfinding : MonoBehaviour {
     private float mMaxVelocity = 0.5f;
     private float mCurrentVelocity = 0;
     private Vector3 dirToFirstNodeInPath = new Vector3();
+    private Vector3 targetPosition = new Vector3();
 
 	void Update(){
         if (Input.GetMouseButtonDown(0)) {
-            Node n = getNodeOfMouseClick();
-            if (n != null)
-                FindPath(transform.position, n.worldPosition);
+            if (!setPositionFromMouseClick())
+                return;
+            FindPath(transform.position, targetPosition);
 		}
+        if(grid.gridUpdated)
+        {
+            grid.gridUpdated = false;
+            FindPath(transform.position, targetPosition);
+        }
 
         if(grid.path != null)
         {
@@ -52,7 +58,7 @@ public class Pathfinding : MonoBehaviour {
 				return;
 			}
 
-			foreach (Node neighbour in grid.getNeigbours(currentNode)){
+			foreach (Node neighbour in grid.GetNeigbours(currentNode)){
 				if( !neighbour.walkable || closedSet.Contains(neighbour)){
 					continue;
 				}
@@ -129,15 +135,16 @@ public class Pathfinding : MonoBehaviour {
         direction.Normalize();
     }
     
-    private Node getNodeOfMouseClick()
+    private bool setPositionFromMouseClick()
     {
-        RaycastHit hit;
+        RaycastHit hitInfo;
         //If the ray hits an object
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, 100))
         {
-            return grid.NodeFromWorldPoint(hit.point);
+            targetPosition = hitInfo.point;
+            return true;
         }
-        return null;
+        return false;
     }
     
     /// <summary>
