@@ -9,3 +9,4 @@ https://forum.unity.com/threads/running-automated-build-with-unity-through-comma
 
 http://fargesportfolio.com/unity-generic-auto-build/
 
+/c/Program\ Files/Unity/Editor/Unity.exe  -projectPath <Unity project folder> -executeMethod BuildCommand.BuildWin64
