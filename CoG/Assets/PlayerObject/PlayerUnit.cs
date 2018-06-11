@@ -7,16 +7,13 @@ using UnityEngine.Networking;
 
 public class PlayerUnit : NetworkBehaviour {
 
+    [SyncVar]
     public int connectionId;
 
 	// Use this for initialization
 	void Start () {
-		
 	}
 
-    public void setConnectionId(int id) {
-        RpcSetConnectionId(id);
-    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -36,8 +33,12 @@ public class PlayerUnit : NetworkBehaviour {
 	}
 
     [ClientRpc]
-    void RpcSetConnectionId(int id)
+    public void RpcSetConnectionId(int id)
     {
+        if (hasAuthority == false)
+        {
+            return;
+        }
         connectionId = id;
     }
 }

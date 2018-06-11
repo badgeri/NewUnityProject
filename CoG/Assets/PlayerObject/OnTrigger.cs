@@ -13,12 +13,21 @@ public class OnTrigger : NetworkBehaviour
             CmdDestroyGameObject(collider.gameObject);
         }
         else if (collider.gameObject.tag == "Playerobject") {
+
+            Debug.Log("trigger with Playerobject.");
+
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
 
             foreach (GameObject gObject in gameObjects)
             {
+                int colliderconnectionid = collider.gameObject.transform.root.GetComponent<PlayerUnit>().connectionId;
+                int gObjectconnectionid = gObject.GetComponent<PlayerConnectionObjectScript>().connectionId;
+
+                Debug.Log("collider connection id = " + colliderconnectionid + " and gameobjectconnectionid = " + gObjectconnectionid);
+
                 if (gObject.GetComponent<PlayerConnectionObjectScript>().connectionId == collider.gameObject.transform.root.GetComponent<PlayerUnit>().connectionId)
                 {
+                    Debug.Log("Setting gold");
                     gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetMoney(200);
                 }
             }

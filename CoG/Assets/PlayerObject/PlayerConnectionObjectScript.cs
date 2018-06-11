@@ -28,8 +28,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
         // Command the server to spawn my unit
         CmdSpawnMyUnit();
-        CmdSetMoney(0);
-        CmdSetConnectionId();
+        CmdSetMoney(0);        
 	}
 
 
@@ -79,11 +78,14 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
     [Command]
     void CmdSpawnMyUnit() {
+
         // We are guaranteed to be on the server right now.
-        GameObject myPlayerUnit = Instantiate(PlayerUnitPrefab);
+        PlayerUnitPrefab = Instantiate(PlayerUnitPrefab);
 
         // Now that the object exists on the server, propagate it to all the clients and also wire up the NetworkIdentity.
-        NetworkServer.SpawnWithClientAuthority(myPlayerUnit, connectionToClient);
+        NetworkServer.SpawnWithClientAuthority(PlayerUnitPrefab, connectionToClient);
+
+        CmdSetConnectionId();
     }
 
     [Command]
@@ -94,7 +96,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
     [Command]
     void CmdSetConnectionId() {
-        RpcSetConnectionId();
+        RpcSetConnectionId();        
     }
 
     [Command]
@@ -117,6 +119,6 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     void RpcSetConnectionId()
     {
         connectionId = GameObject.FindWithTag("ConnectionManager").GetComponent<ServerConnectionInformation>().getConnectionId();
-        PlayerUnitPrefab.GetComponent<PlayerUnit>().setConnectionId(connectionId);
+        PlayerUnitPrefab.GetComponent<PlayerUnit>().RpcSetConnectionId(connectionId);
     }
 }
