@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class Pathfinding : MonoBehaviour {
+public class Pathfinding : NetworkBehaviour
+{
 
 	public Playground grid;
 
@@ -9,26 +11,39 @@ public class Pathfinding : MonoBehaviour {
     private float mCurrentVelocity = 0;
     private Vector3 dirToFirstNodeInPath = new Vector3();
     private Vector3 targetPosition = new Vector3();
+    bool isOrderedToMove = false;
 
     // Use this for initialization
     void Start()
     {
+        // Remember: Update runs on everyones computer, whether or not they own this particular player object.
         grid = GameObject.FindWithTag("Playground").GetComponent<Playground>();
     }
 
     void Update(){
+        // Remember: Update runs on everyones computer, whether or not they own this particular player object.
+        if (hasAuthority == false)
+        {
+            return;
+        }
+
+        //find new mouse input
         if (Input.GetMouseButtonDown(0)) {
             if (!setPositionFromMouseClick())
                 return;
             FindPath(transform.position, targetPosition);
-		}
-        if(grid.gridUpdated)
+            isOrderedToMove = true;
+        }
+
+        //if grid has been updated
+        if (grid.gridUpdated)
         {
             grid.gridUpdated = false;
             FindPath(transform.position, targetPosition);
         }
 
-        if(grid.path != null)
+        //if we have a grid path
+        if (grid.path != null && isOrderedToMove)
         {
             UpdateTravelDirection(grid.path);
 
@@ -36,7 +51,8 @@ public class Pathfinding : MonoBehaviour {
                 CalculateAndUpdateVelocity(dirToFirstNodeInPath);
             }
             else {
-                GetComponent<Rigidbody>().velocity.Set(0, 0, 0);
+                GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+                isOrderedToMove = false;
             }
         }
     }

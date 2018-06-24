@@ -113,6 +113,48 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &42276858
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4849798707358594, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -9.076691
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849798707358594, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849798707358594, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -11.981167
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849798707358594, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849798707358594, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849798707358594, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849798707358594, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849798707358594, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: d1992144e3dcf23489a9d026a8deb869, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,48 +327,9 @@ MonoBehaviour:
   gridWorldSize: {x: 200, y: 200}
   nodeRadius: 0.5
   safeRadius: 0.5
---- !u!1001 &223035737
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4592407426322434, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -12.264342
-      objectReference: {fileID: 0}
-    - target: {fileID: 4592407426322434, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4592407426322434, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -17.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4592407426322434, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4592407426322434, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4592407426322434, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4592407426322434, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4592407426322434, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
-  m_IsPrefabParent: 0
+  gridUpdated: 0
+  treshhold: 3
+  runCase: 0
 --- !u!1 &282840810
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +490,7 @@ MonoBehaviour:
   m_OnlineScene: 
   m_SpawnPrefabs:
   - {fileID: 1656871947632704, guid: f45a2b8f66c33e840be6e4342d7d0047, type: 2}
-  - {fileID: 1942108261985162, guid: 4e899ac8a273026498df21b5907cf2f8, type: 2}
+  - {fileID: 0}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
