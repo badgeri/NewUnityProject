@@ -8,6 +8,7 @@ public class Pathfinding : MonoBehaviour {
     private float mMaxVelocity = 10f;
     private float mCurrentVelocity = 0;
     private Vector3 dirToFirstNodeInPath = new Vector3();
+    private Vector3 targetPosition = new Vector3();
 
     // Use this for initialization
     void Start()
@@ -17,10 +18,15 @@ public class Pathfinding : MonoBehaviour {
 
     void Update(){
         if (Input.GetMouseButtonDown(0)) {
-            Node n = getNodeOfMouseClick();
-            if (n != null)
-                FindPath(transform.position, n.worldPosition);
+            if (!setPositionFromMouseClick())
+                return;
+            FindPath(transform.position, targetPosition);
 		}
+        if(grid.gridUpdated)
+        {
+            grid.gridUpdated = false;
+            FindPath(transform.position, targetPosition);
+        }
 
         if(grid.path != null)
         {
@@ -58,7 +64,7 @@ public class Pathfinding : MonoBehaviour {
 				return;
 			}
 
-			foreach (Node neighbour in grid.getNeigbours(currentNode)){
+			foreach (Node neighbour in grid.GetNeigbours(currentNode)){
 				if( !neighbour.walkable || closedSet.Contains(neighbour)){
 					continue;
 				}
@@ -102,22 +108,34 @@ public class Pathfinding : MonoBehaviour {
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
+    private Vector3 mPathDir = new Vector3();
     private void UpdateTravelDirection(List<Node> path)
     {
         if (path.Count == 0) return;
 
-        Vector3 pathDir = new Vector3();
+        //TODO ether shoot a ray from transform.position to the grid to 
+        //     get the proper y value, or make sure that the gameObjects 
+        //     transform.position.y is on the bottom of the object and 
+        //     then the dirToFirstNodeInPath.y = 0 can be ignored
         dirToFirstNodeInPath = path[0].worldPosition - transform.position;
+        dirToFirstNodeInPath.y = 0;
         dirToFirstNodeInPath.Normalize();
         if (path.Count > 1)
         {
-            pathDir = path[1].worldPosition - path[0].worldPosition;
-            pathDir.Normalize();
+            mPathDir = path[1].worldPosition - path[0].worldPosition;
+            mPathDir.y = 0;
+            mPathDir.Normalize();
+        }
+        else if( mPathDir.magnitude == 0) //in case the path is really short
+        {
+            mPathDir = path[0].worldPosition - transform.position;
+            mPathDir.y = 0;
+            mPathDir.Normalize();
         }
 
         // if Dot < 0, vectors are in opposite direction, recalculate new direction
         // meaning that we have past path[0] and need to aim for the next node in path
-        if ( Vector3.Dot(dirToFirstNodeInPath, pathDir) < 0)
+        if ( Vector3.Dot(dirToFirstNodeInPath, mPathDir) < 0)
         {
             path.RemoveAt(0);
             UpdateTravelDirection(path);
@@ -135,15 +153,16 @@ public class Pathfinding : MonoBehaviour {
         direction.Normalize();
     }
     
-    private Node getNodeOfMouseClick()
+    private bool setPositionFromMouseClick()
     {
-        RaycastHit hit;
+        RaycastHit hitInfo;
         //If the ray hits an object
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, 100))
         {
-            return grid.NodeFromWorldPoint(hit.point);
+            targetPosition = hitInfo.point;
+            return true;
         }
-        return null;
+        return false;
     }
     
     /// <summary>
