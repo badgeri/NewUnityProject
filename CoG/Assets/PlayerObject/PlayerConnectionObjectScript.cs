@@ -5,14 +5,10 @@ using UnityEngine.Networking;
 
 public class PlayerConnectionObjectScript : NetworkBehaviour {
     public GameObject PlayerUnitPrefab;
-
-    public int connectionId;
-
     public string PlayerName = "Anonymous";
 
     [SyncVar]
     public int Money;
-
 
     // Use this for initialization
     void Start () {
@@ -51,7 +47,6 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Q)) {
             string n = "Badg" + Random.Range(1, 100);
-
             Debug.Log("Sending the server a request to change our name to: " + n);
             CmdChangePlayerName(n);
         }
@@ -61,13 +56,10 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
             CmdSetMoney(100);
         }
     }
-
     
     void OnPlayerNameChanged(string newName) {
         Debug.Log("OnPlayerNameChanged: OldName: " + PlayerName + " NewName: " + newName);
-
         PlayerName = newName;
-
         gameObject.name = "PlayerConnectionObject [" + newName + "]";
     }
 
@@ -75,7 +67,6 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     ///COMMANDS
     ///Special functions that ONLY get executed on the server.
     ///
-
     [Command]
     void CmdSpawnMyUnit() {
 
@@ -84,8 +75,6 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
         // Now that the object exists on the server, propagate it to all the clients and also wire up the NetworkIdentity.
         NetworkServer.SpawnWithClientAuthority(PlayerUnitPrefab, connectionToClient);
-
-        CmdSetConnectionId();
     }
 
     [Command]
@@ -95,15 +84,9 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     }
 
     [Command]
-    void CmdSetConnectionId() {
-        RpcSetConnectionId();        
-    }
-
-    [Command]
     public void CmdSetMoney(int amount) {
-        Money = amount;
+        Money += amount;
     }
-
 
     ///RPC
     ///Special functions that ONLY get executed on the clients.
@@ -113,12 +96,5 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     void RpcChangePlayerName(string n) {
         Debug.Log("RpcChangePlayerName: We were asked to change the player name on a particular PlayerConnectionObject" + n);
         PlayerName = n;
-    }
-
-    [ClientRpc]
-    void RpcSetConnectionId()
-    {
-        connectionId = GameObject.FindWithTag("ConnectionManager").GetComponent<ServerConnectionInformation>().getConnectionId();
-        PlayerUnitPrefab.GetComponent<PlayerUnit>().RpcSetConnectionId(connectionId);
     }
 }

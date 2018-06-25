@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4715716339472118}
   - component: {fileID: 114045870359224336}
-  - component: {fileID: 114470190107581832}
   m_Layer: 0
   m_Name: ConnectionManager
   m_TagString: ConnectionManager
@@ -73,14 +72,3 @@ MonoBehaviour:
     i15: 235
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114470190107581832
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1286324951974826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 022123a59669ed44bb1cbe6e003e206b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -13,22 +13,13 @@ public class OnTrigger : NetworkBehaviour
             CmdDestroyGameObject(collider.gameObject);
         }
         else if (collider.gameObject.tag == "Playerobject") {
-
-            Debug.Log("trigger with Playerobject.");
-
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
 
             foreach (GameObject gObject in gameObjects)
             {
-                int colliderconnectionid = collider.gameObject.transform.root.GetComponent<PlayerUnit>().connectionId;
-                int gObjectconnectionid = gObject.GetComponent<PlayerConnectionObjectScript>().connectionId;
-
-                Debug.Log("collider connection id = " + colliderconnectionid + " and gameobjectconnectionid = " + gObjectconnectionid);
-
-                if (gObject.GetComponent<PlayerConnectionObjectScript>().connectionId == collider.gameObject.transform.root.GetComponent<PlayerUnit>().connectionId)
+                if (collider.gameObject.transform.root.GetComponent<PlayerUnit>().netId == gObject.GetComponent<PlayerConnectionObjectScript>().PlayerUnitPrefab.GetComponent<PlayerUnit>().netId)
                 {
-                    Debug.Log("Setting gold");
-                    gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetMoney(200);
+                    CmdGivePlayerGold(gObject);
                 }
             }
         }
@@ -37,6 +28,15 @@ public class OnTrigger : NetworkBehaviour
     [Command]
     void CmdDestroyGameObject(GameObject gObject)
     {
+        Debug.Log("Destroy on server");
         Destroy(gObject);
     }
+
+    [Command]
+    void CmdGivePlayerGold(GameObject gObject)
+    {
+        Debug.Log("Set gold on server");
+        gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetMoney(200);
+    }
+
 }

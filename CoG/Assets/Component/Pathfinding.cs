@@ -11,7 +11,7 @@ public class Pathfinding : NetworkBehaviour
     private float mCurrentVelocity = 0;
     private Vector3 dirToFirstNodeInPath = new Vector3();
     private Vector3 targetPosition = new Vector3();
-    bool isOrderedToMove = false;
+    private bool isOrderedToMove = false;
 
     // Use this for initialization
     void Start()

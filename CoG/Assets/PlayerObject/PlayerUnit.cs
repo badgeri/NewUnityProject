@@ -7,9 +7,6 @@ using UnityEngine.Networking;
 
 public class PlayerUnit : NetworkBehaviour {
 
-    [SyncVar]
-    public int connectionId;
-
 	// Use this for initialization
 	void Start () {
 	}
@@ -32,13 +29,8 @@ public class PlayerUnit : NetworkBehaviour {
         }
 	}
 
-    [ClientRpc]
-    public void RpcSetConnectionId(int id)
+    public bool hasCallerAuthority()
     {
-        if (hasAuthority == false)
-        {
-            return;
-        }
-        connectionId = id;
+        return hasAuthority;
     }
 }
