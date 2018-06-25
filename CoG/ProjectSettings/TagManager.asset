@@ -9,6 +9,7 @@ TagManager:
   - Playerobject
   - NetworkManager
   - ConnectionManager
+  - Wood
   layers:
   - Default
   - TransparentFX

@@ -8,7 +8,7 @@ public class OnTrigger : NetworkBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "Gold")
+        if (collider.gameObject.tag == "Gold" || collider.gameObject.tag == "Wood")
         {
             CmdDestroyGameObject(collider.gameObject);
         }
@@ -19,7 +19,14 @@ public class OnTrigger : NetworkBehaviour
             {
                 if (collider.gameObject.transform.root.GetComponent<PlayerUnit>().netId == gObject.GetComponent<PlayerConnectionObjectScript>().PlayerUnitPrefab.GetComponent<PlayerUnit>().netId)
                 {
-                    CmdGivePlayerGold(gObject);
+                    if (gameObject.tag == "Gold")
+                    {
+                        CmdGivePlayerGold(gObject);
+                    }
+                    else if (gameObject.tag == "Wood")
+                    {
+                        CmdGivePlayerWood(gObject);
+                    }
                 }
             }
         }
@@ -28,15 +35,19 @@ public class OnTrigger : NetworkBehaviour
     [Command]
     void CmdDestroyGameObject(GameObject gObject)
     {
-        Debug.Log("Destroy on server");
         Destroy(gObject);
     }
 
     [Command]
     void CmdGivePlayerGold(GameObject gObject)
     {
-        Debug.Log("Set gold on server");
         gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetMoney(200);
+    }
+
+    [Command]
+    void CmdGivePlayerWood(GameObject gObject)
+    {
+        gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetWood(200);
     }
 
 }

@@ -9,6 +9,8 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
     [SyncVar]
     public int Money;
+    [SyncVar]
+    public int Wood;
 
     // Use this for initialization
     void Start () {
@@ -24,8 +26,9 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
         // Command the server to spawn my unit
         CmdSpawnMyUnit();
-        CmdSetMoney(0);        
-	}
+        CmdSetMoney(0);
+        CmdSetWood(0);
+    }
 
 
     //SyncVars are variables where if their value changes on the SERVER, then all clients are automatically informed of the new value.
@@ -49,11 +52,6 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
             string n = "Badg" + Random.Range(1, 100);
             Debug.Log("Sending the server a request to change our name to: " + n);
             CmdChangePlayerName(n);
-        }
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            CmdSetMoney(100);
         }
     }
     
@@ -86,6 +84,12 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     [Command]
     public void CmdSetMoney(int amount) {
         Money += amount;
+    }
+
+    [Command]
+    public void CmdSetWood(int amount)
+    {
+        Wood += amount;
     }
 
     ///RPC
