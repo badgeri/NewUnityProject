@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class PlayerConnectionObjectScript : NetworkBehaviour {
     public GameObject PlayerUnitPrefab;
     public string PlayerName = "Anonymous";
+    private bool isReady = false;
 
     [SyncVar]
     public int Money;
@@ -34,11 +35,18 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     //SyncVars are variables where if their value changes on the SERVER, then all clients are automatically informed of the new value.
     //[SyncVar(hook="OnPlayerNameChanged")]
 
+    /*
+    void OnPlayerNameChanged(string newName)
+    {
+        Debug.Log("OnPlayerNameChanged: OldName: " + PlayerName + " NewName: " + newName);
+        PlayerName = newName;
+        gameObject.name = "PlayerConnectionObject [" + newName + "]";
+    }
+    */
 
-    
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 		// Remember: Update runs on everyones computer, whether or not they own this particular player object.
         if (isLocalPlayer == false) {
             return;
@@ -48,6 +56,11 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
             CmdSpawnMyUnit();
         }
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            isReady = true;
+        }
+
         if (Input.GetKeyDown(KeyCode.Q)) {
             string n = "Badg" + Random.Range(1, 100);
             Debug.Log("Sending the server a request to change our name to: " + n);
@@ -55,10 +68,11 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         }
     }
     
-    void OnPlayerNameChanged(string newName) {
-        Debug.Log("OnPlayerNameChanged: OldName: " + PlayerName + " NewName: " + newName);
-        PlayerName = newName;
-        gameObject.name = "PlayerConnectionObject [" + newName + "]";
+    
+
+    public bool IsReady()
+    {
+        return isReady;
     }
 
 
@@ -91,6 +105,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     {
         Wood += amount;
     }
+
 
     ///RPC
     ///Special functions that ONLY get executed on the clients.
