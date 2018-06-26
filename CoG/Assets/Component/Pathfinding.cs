@@ -12,6 +12,7 @@ public class Pathfinding : NetworkBehaviour
     private Vector3 dirToFirstNodeInPath = new Vector3();
     private Vector3 targetPosition = new Vector3();
     private bool isOrderedToMove = false;
+    //private GameObject relatedPlayerConnectionObject;
 
     // Use this for initialization
     void Start()
@@ -25,6 +26,19 @@ public class Pathfinding : NetworkBehaviour
         if (hasAuthority == false)
         {
             return;
+        }
+
+
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject gObject in gameObjects)
+        {
+            if (gameObject.transform.root.GetComponent<PlayerUnit>().netId == gObject.GetComponent<PlayerConnectionObjectScript>().PlayerUnitPrefab.GetComponent<PlayerUnit>().netId) ///TODO set this in the constructor so we dont have to do this loop every time... //Todo2 isnt working for multiplayer??
+            {
+                if (!gObject.GetComponent<PlayerConnectionObjectScript>().getIsPlayersTurn()) {
+                    return;
+                }
+            }
         }
 
         //find new mouse input

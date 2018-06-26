@@ -5,6 +5,8 @@ using UnityEngine;
 public class RoundsScript : MonoBehaviour {
 
     bool hasStarted = false;
+    int nrOfPlayers;
+    int currentPlayersTurn;
 
     // Use this for initialization
     void Start()
@@ -21,7 +23,7 @@ public class RoundsScript : MonoBehaviour {
             int nrReady = 0;
             foreach (GameObject gObject in gameObjects)
             {
-                if (gObject.GetComponent<PlayerConnectionObjectScript>().IsReady())
+                if (gObject.GetComponent<PlayerConnectionObjectScript>().getIsReady())
                 {
                     nrReady++;
                 }
@@ -29,8 +31,31 @@ public class RoundsScript : MonoBehaviour {
             if (gameObjects.Length == nrReady && nrReady > 0)
             {
                 hasStarted = true;
+                nrOfPlayers = gameObjects.Length;
                 //todo need to block connecting players? 
+                foreach (GameObject gObject in gameObjects)
+                {
+                    gObject.GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(false);
+                }
+                gameObjects[0].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
+                currentPlayersTurn = 1;
             }
+        }
+    }
+
+    public void playerTurnDone()
+    {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
+        gameObjects[currentPlayersTurn - 1].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(false);
+        if (currentPlayersTurn == nrOfPlayers)
+        {
+            gameObjects[0].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
+            currentPlayersTurn = 1;
+        }
+        else
+        {
+            gameObjects[currentPlayersTurn].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
+            currentPlayersTurn++;
         }
     }
 }

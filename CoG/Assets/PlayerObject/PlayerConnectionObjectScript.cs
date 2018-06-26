@@ -6,12 +6,15 @@ using UnityEngine.Networking;
 public class PlayerConnectionObjectScript : NetworkBehaviour {
     public GameObject PlayerUnitPrefab;
     public string PlayerName = "Anonymous";
-    private bool isReady = false;
-
+    
     [SyncVar]
     public int Money;
     [SyncVar]
     public int Wood;
+    [SyncVar]
+    private bool isReady = false;
+    [SyncVar]
+    private bool isPlayersTurn = true;
 
     // Use this for initialization
     void Start () {
@@ -58,7 +61,12 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            isReady = true;
+            CmdSetIsReady(true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            CmdSetTurnDone();
         }
 
         if (Input.GetKeyDown(KeyCode.Q)) {
@@ -67,12 +75,20 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
             CmdChangePlayerName(n);
         }
     }
-    
-    
 
-    public bool IsReady()
+    public bool getIsReady()
     {
         return isReady;
+    }
+
+    public bool getIsPlayersTurn()
+    {
+        return isPlayersTurn;
+    }
+
+    public void setIsPlayersTurn(bool isTurn)
+    {
+        isPlayersTurn = isTurn;
     }
 
 
@@ -104,6 +120,18 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     public void CmdSetWood(int amount)
     {
         Wood += amount;
+    }
+
+    [Command]
+    public void CmdSetIsReady(bool ready)
+    {
+        isReady = ready;
+    }
+
+    [Command]
+    public void CmdSetTurnDone()
+    {
+        GameObject.FindGameObjectWithTag("RoundManager").GetComponent<RoundsScript>().playerTurnDone();
     }
 
 
