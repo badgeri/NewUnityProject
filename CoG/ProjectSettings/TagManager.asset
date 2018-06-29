@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Gold
+  - Playground
+  - Playerobject
+  - NetworkManager
+  - ConnectionManager
+  - Wood
+  - RoundManager
   layers:
   - Default
   - TransparentFX

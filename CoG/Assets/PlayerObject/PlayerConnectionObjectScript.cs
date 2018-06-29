@@ -5,10 +5,16 @@ using UnityEngine.Networking;
 
 public class PlayerConnectionObjectScript : NetworkBehaviour {
     public GameObject PlayerUnitPrefab;
-
+    public string PlayerName = "Anonymous";
+    
     [SyncVar]
     public int Money;
-
+    [SyncVar]
+    public int Wood;
+    [SyncVar]
+    private bool isReady = false;
+    [SyncVar]
+    private bool isPlayersTurn = true;
 
     // Use this for initialization
     void Start () {
@@ -25,17 +31,25 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         // Command the server to spawn my unit
         CmdSpawnMyUnit();
         CmdSetMoney(0);
-	}
+        CmdSetWood(0);
+    }
 
 
     //SyncVars are variables where if their value changes on the SERVER, then all clients are automatically informed of the new value.
     //[SyncVar(hook="OnPlayerNameChanged")]
 
+    /*
+    void OnPlayerNameChanged(string newName)
+    {
+        Debug.Log("OnPlayerNameChanged: OldName: " + PlayerName + " NewName: " + newName);
+        PlayerName = newName;
+        gameObject.name = "PlayerConnectionObject [" + newName + "]";
+    }
+    */
 
-    public string PlayerName = "Anonymous";
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 		// Remember: Update runs on everyones computer, whether or not they own this particular player object.
         if (isLocalPlayer == false) {
             return;
@@ -45,57 +59,79 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
             CmdSpawnMyUnit();
         }
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            CmdSetIsReady(true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            CmdSetTurnDone();
+        }
+
         if (Input.GetKeyDown(KeyCode.Q)) {
             string n = "Badg" + Random.Range(1, 100);
-
             Debug.Log("Sending the server a request to change our name to: " + n);
             CmdChangePlayerName(n);
         }
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            CmdSetMoney(100);
-        }
     }
 
-    
-    void OnPlayerNameChanged(string newName) {
-        Debug.Log("OnPlayerNameChanged: OldName: " + PlayerName + " NewName: " + newName);
+    public bool getIsReady()
+    {
+        return isReady;
+    }
 
-        PlayerName = newName;
+    public bool getIsPlayersTurn()
+    {
+        return isPlayersTurn;
+    }
 
-        gameObject.name = "PlayerConnectionObject [" + newName + "]";
+    public void setIsPlayersTurn(bool isTurn)
+    {
+        isPlayersTurn = isTurn;
     }
 
 
     ///COMMANDS
     ///Special functions that ONLY get executed on the server.
     ///
-
     [Command]
     void CmdSpawnMyUnit() {
+
         // We are guaranteed to be on the server right now.
-        GameObject myPlayerUnit = Instantiate(PlayerUnitPrefab);
+        PlayerUnitPrefab = Instantiate(PlayerUnitPrefab);
 
         // Now that the object exists on the server, propagate it to all the clients and also wire up the NetworkIdentity.
-        NetworkServer.SpawnWithClientAuthority(myPlayerUnit, connectionToClient);
+        NetworkServer.SpawnWithClientAuthority(PlayerUnitPrefab, connectionToClient);
     }
 
     [Command]
     void CmdChangePlayerName(string n) {
         Debug.Log("CmdChangePlayerName: " + n);
-
-        //Maybe check name is allowed.
-        //IF it isnt allowed, do we just ignore this request and do nothing? Or do we still call the RPC but with the original name?
-
-        PlayerName = n;
-        //Tell all the clients what this player's name now is.
-        RpcChangePlayerName(PlayerName);
+        RpcChangePlayerName(n);
     }
 
     [Command]
     public void CmdSetMoney(int amount) {
-        Money = amount;
+        Money += amount;
+    }
+
+    [Command]
+    public void CmdSetWood(int amount)
+    {
+        Wood += amount;
+    }
+
+    [Command]
+    public void CmdSetIsReady(bool ready)
+    {
+        isReady = ready;
+    }
+
+    [Command]
+    public void CmdSetTurnDone()
+    {
+        GameObject.FindGameObjectWithTag("RoundManager").GetComponent<RoundsScript>().playerTurnDone();
     }
 
 

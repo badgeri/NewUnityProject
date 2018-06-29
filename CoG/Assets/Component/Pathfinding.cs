@@ -1,28 +1,63 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class Pathfinding : MonoBehaviour {
+public class Pathfinding : NetworkBehaviour
+{
 
 	public Playground grid;
 
-    private float mMaxVelocity = 0.5f;
+    private float mMaxVelocity = 10f;
     private float mCurrentVelocity = 0;
     private Vector3 dirToFirstNodeInPath = new Vector3();
     private Vector3 targetPosition = new Vector3();
+    private bool isOrderedToMove = false;
+    //private GameObject relatedPlayerConnectionObject;
 
-	void Update(){
+    // Use this for initialization
+    void Start()
+    {
+        // Remember: Update runs on everyones computer, whether or not they own this particular player object.
+        grid = GameObject.FindWithTag("Playground").GetComponent<Playground>();
+    }
+
+    void Update(){
+        // Remember: Update runs on everyones computer, whether or not they own this particular player object.
+        if (hasAuthority == false)
+        {
+            return;
+        }
+
+
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject gObject in gameObjects)
+        {
+            if (gameObject.transform.root.GetComponent<PlayerUnit>().netId == gObject.GetComponent<PlayerConnectionObjectScript>().PlayerUnitPrefab.GetComponent<PlayerUnit>().netId) ///TODO set this in the constructor so we dont have to do this loop every time... //Todo2 isnt working for multiplayer??
+            {
+                if (!gObject.GetComponent<PlayerConnectionObjectScript>().getIsPlayersTurn()) {
+                    return;
+                }
+            }
+        }
+
+        //find new mouse input
         if (Input.GetMouseButtonDown(0)) {
             if (!setPositionFromMouseClick())
                 return;
             FindPath(transform.position, targetPosition);
-		}
-        if(grid.gridUpdated)
+            isOrderedToMove = true;
+        }
+
+        //if grid has been updated
+        if (grid.gridUpdated)
         {
             grid.gridUpdated = false;
             FindPath(transform.position, targetPosition);
         }
 
-        if(grid.path != null)
+        //if we have a grid path
+        if (grid.path != null && isOrderedToMove)
         {
             UpdateTravelDirection(grid.path);
 
@@ -30,7 +65,8 @@ public class Pathfinding : MonoBehaviour {
                 CalculateAndUpdateVelocity(dirToFirstNodeInPath);
             }
             else {
-                GetComponent<Rigidbody>().velocity.Set(0, 0, 0);
+                GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+                isOrderedToMove = false;
             }
         }
     }
@@ -173,8 +209,6 @@ public class Pathfinding : MonoBehaviour {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
             {
                 Vector3 g = hit.point;
-                Rigidbody rb = GetComponent<Rigidbody>();
-
                 var heading = hit.point - transform.position;
                 var distance = heading.magnitude;
                 direction = heading / distance;
