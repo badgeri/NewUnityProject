@@ -14,40 +14,37 @@ public class OnTrigger : NetworkBehaviour
         }
         else if (collider.gameObject.tag == "Playerobject") {
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
-
             foreach (GameObject gObject in gameObjects)
             {
-                if (collider.gameObject.transform.root.GetComponent<PlayerUnit>().netId == gObject.GetComponent<PlayerConnectionObjectScript>().PlayerUnitPrefab.GetComponent<PlayerUnit>().netId)
+                if (gObject.GetComponent<PlayerConnectionObjectScript>().hasAuthority) //todo - still need to check the correct gameobject... for some reason this does run on the other client and has authority fucks up.
                 {
                     if (gameObject.tag == "Gold")
                     {
-                        CmdGivePlayerGold(gObject);
+                        GivePlayerGold(gObject);
                     }
                     else if (gameObject.tag == "Wood")
                     {
-                        CmdGivePlayerWood(gObject);
+                        GivePlayerWood(gObject);
                     }
                 }
             }
         }
     }
 
+    void GivePlayerGold(GameObject gObject)
+    {
+        gObject.GetComponent<PlayerConnectionObjectScript>().SetMoney(200);
+    }
+
+    void GivePlayerWood(GameObject gObject)
+    {
+        gObject.GetComponent<PlayerConnectionObjectScript>().SetWood(200);
+    }
+
     [Command]
     void CmdDestroyGameObject(GameObject gObject)
     {
         Destroy(gObject);
-    }
-
-    [Command]
-    void CmdGivePlayerGold(GameObject gObject)
-    {
-        gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetMoney(200);
-    }
-
-    [Command]
-    void CmdGivePlayerWood(GameObject gObject)
-    {
-        gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetWood(200);
     }
 
 }

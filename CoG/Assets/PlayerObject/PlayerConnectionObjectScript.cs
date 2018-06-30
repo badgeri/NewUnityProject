@@ -92,6 +92,16 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     }
 
 
+    public void SetMoney(int amount)
+    {
+        CmdSetMoney(amount);
+    }
+
+    public void SetWood(int amount)
+    {
+        CmdSetWood(amount);
+    }
+
     ///COMMANDS
     ///Special functions that ONLY get executed on the server.
     ///
@@ -103,7 +113,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
         // Now that the object exists on the server, propagate it to all the clients and also wire up the NetworkIdentity.
         NetworkServer.SpawnWithClientAuthority(PlayerUnitPrefab, connectionToClient);
-    }
+    }     
 
     [Command]
     void CmdChangePlayerName(string n) {
@@ -112,24 +122,24 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdSetMoney(int amount) {
+    private void CmdSetMoney(int amount) {
         Money += amount;
     }
 
     [Command]
-    public void CmdSetWood(int amount)
+    private void CmdSetWood(int amount)
     {
         Wood += amount;
     }
 
     [Command]
-    public void CmdSetIsReady(bool ready)
+    private void CmdSetIsReady(bool ready)
     {
         isReady = ready;
     }
 
     [Command]
-    public void CmdSetTurnDone()
+    private void CmdSetTurnDone()
     {
         GameObject.FindGameObjectWithTag("RoundManager").GetComponent<RoundsScript>().playerTurnDone();
     }
