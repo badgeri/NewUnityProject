@@ -11,6 +11,9 @@ TagManager:
   - ConnectionManager
   - Wood
   - RoundManager
+  - GoldMine
+  - Undefined
+  - PlayerUnit
   layers:
   - Default
   - TransparentFX

@@ -6,7 +6,10 @@ using UnityEngine.Networking;
 public class PlayerConnectionObjectScript : NetworkBehaviour {
     public GameObject PlayerUnitPrefab;
     public string PlayerName = "Anonymous";
-    
+
+
+    [SyncVar]
+    bool shouldInitializePlayerUnit = false;
     [SyncVar]
     public int Money;
     [SyncVar]
@@ -53,6 +56,22 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 		// Remember: Update runs on everyones computer, whether or not they own this particular player object.
         if (isLocalPlayer == false) {
             return;
+        }
+
+        if (shouldInitializePlayerUnit)
+        {
+            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("PlayerUnit");
+            foreach (GameObject gObject in gameObjects)
+            {
+                if (gObject.GetComponent<PlayerUnit>().hasAuthority)
+                {
+                    if (gObject.GetComponent<PlayerUnit>().setParentNetworkId(netId)) //// <---- does not work, PlayerUnitPrefab is not the instance that is created!!!
+                    {
+                        shouldInitializePlayerUnit = false;
+                    }
+
+                }
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.S)) {
@@ -113,6 +132,8 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
         // Now that the object exists on the server, propagate it to all the clients and also wire up the NetworkIdentity.
         NetworkServer.SpawnWithClientAuthority(PlayerUnitPrefab, connectionToClient);
+
+        shouldInitializePlayerUnit = true;
     }     
 
     [Command]

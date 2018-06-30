@@ -7,11 +7,14 @@ public class RoundsScript : MonoBehaviour {
     bool hasStarted = false;
     int nrOfPlayers;
     int currentPlayersTurn;
+    int currentDay;
+    int currentWeek;
 
     // Use this for initialization
     void Start()
     {
-
+        currentDay = 1;
+        currentWeek = 1;
     }
 
     // Update is called once per frame
@@ -51,11 +54,26 @@ public class RoundsScript : MonoBehaviour {
         {
             gameObjects[0].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
             currentPlayersTurn = 1;
+            nextDay();
         }
         else
         {
             gameObjects[currentPlayersTurn].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
             currentPlayersTurn++;
         }
+    }
+
+    private void nextDay()
+    {
+        if (currentDay % 7 == 0)
+        {
+            nextWeek();
+        }
+        currentDay++;
+    }
+
+    private void nextWeek()
+    {
+        currentWeek++;
     }
 }
