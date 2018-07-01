@@ -13,6 +13,8 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     [SyncVar]
     public int Money;
     [SyncVar]
+    public int GoldMine;
+    [SyncVar]
     public int Wood;
     [SyncVar]
     private bool isReady = false;
@@ -34,6 +36,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         // Command the server to spawn my unit
         CmdSpawnMyUnit();
         CmdSetMoney(0);
+        CmdSetGoldMine(0);
         CmdSetWood(0);
     }
 
@@ -110,7 +113,6 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         isPlayersTurn = isTurn;
     }
 
-
     public void SetMoney(int amount)
     {
         CmdSetMoney(amount);
@@ -119,6 +121,16 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     public void SetWood(int amount)
     {
         CmdSetWood(amount);
+    }
+
+    public void SetGoldMine(int amount)
+    {
+        CmdSetGoldMine(amount);
+    }
+
+    public void newDay()
+    {
+        CmdSetMoney(GoldMine * 100);
     }
 
     ///COMMANDS
@@ -151,6 +163,12 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     private void CmdSetWood(int amount)
     {
         Wood += amount;
+    }
+
+    [Command]
+    private void CmdSetGoldMine(int amount)
+    {
+        GoldMine += amount;
     }
 
     [Command]

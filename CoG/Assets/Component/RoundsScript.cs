@@ -20,6 +20,10 @@ public class RoundsScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+
+        //todo - should add "hasAuthority" to methods?
+
+
         if (!hasStarted)
         {
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
@@ -53,8 +57,8 @@ public class RoundsScript : MonoBehaviour {
         if (currentPlayersTurn == nrOfPlayers)
         {
             gameObjects[0].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
-            currentPlayersTurn = 1;
             nextDay();
+            currentPlayersTurn = 1;
         }
         else
         {
@@ -65,6 +69,12 @@ public class RoundsScript : MonoBehaviour {
 
     private void nextDay()
     {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject gObject in gameObjects)
+        {
+            gObject.GetComponent<PlayerConnectionObjectScript>().newDay();
+        }
+
         if (currentDay % 7 == 0)
         {
             nextWeek();
