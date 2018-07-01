@@ -15,9 +15,9 @@ public class Pick : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         oldPosition = transform.position;
+        grid = GameObject.FindWithTag("Playground").GetComponent<Playground>();
 	}
-	
-                GameObject ghostMesh;
+
 	// Update is called once per frame
 	void Update () {
         if (onHold)
@@ -50,9 +50,10 @@ public class Pick : MonoBehaviour {
         }
         else if (Input.GetMouseButtonDown(0))
         {
-            createGostMesh(gameObject, out ghostMesh);
-            grid.UpdateGrid(ghostMesh);
-            Destroy(ghostMesh);
+            int tmpMask = gameObject.layer;
+            gameObject.layer = ExtendLayerMask.GhostMask;
+            grid.UpdateGrid(gameObject);
+            gameObject.layer = tmpMask;
             pickupObject();
         }
     }
