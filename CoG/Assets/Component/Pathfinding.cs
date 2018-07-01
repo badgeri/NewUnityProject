@@ -23,20 +23,23 @@ public class Pathfinding : NetworkBehaviour
 
     void Update(){
         // Remember: Update runs on everyones computer, whether or not they own this particular player object.
-        if (hasAuthority == false)
+        if (GetComponent<NetworkIdentity>() != null)
         {
-            return;
-        }
-
-
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
-
-        foreach (GameObject gObject in gameObjects)
-        {
-            if (gameObject.transform.root.GetComponent<PlayerUnit>().netId == gObject.GetComponent<PlayerConnectionObjectScript>().PlayerUnitPrefab.GetComponent<PlayerUnit>().netId) ///TODO set this in the constructor so we dont have to do this loop every time... //Todo2 isnt working for multiplayer??
+            if (hasAuthority == false)
             {
-                if (!gObject.GetComponent<PlayerConnectionObjectScript>().getIsPlayersTurn()) {
-                    return;
+                return;
+            }
+
+            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
+
+            foreach (GameObject gObject in gameObjects)
+            {
+                if (gameObject.transform.root.GetComponent<PlayerUnit>().netId == gObject.GetComponent<PlayerConnectionObjectScript>().PlayerUnitPrefab.GetComponent<PlayerUnit>().netId) ///TODO set this in the constructor so we dont have to do this loop every time... //Todo2 isnt working for multiplayer??
+                {
+                    if (!gObject.GetComponent<PlayerConnectionObjectScript>().getIsPlayersTurn())
+                    {
+                        return;
+                    }
                 }
             }
         }
