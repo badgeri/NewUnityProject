@@ -18,6 +18,11 @@ public class Playground : MonoBehaviour {
     int gridSizeX;
     int gridSizeY;
 
+    private void Reset()
+    {
+        gameObject.tag = "Playground";
+    }
+
     void Start() {
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
