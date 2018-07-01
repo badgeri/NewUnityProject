@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114395100220458572}
   - component: {fileID: 114616636052271398}
   - component: {fileID: 114701194433701710}
+  - component: {fileID: 114759727276673286}
   m_Layer: 0
   m_Name: GoldMine
   m_TagString: GoldMine
@@ -151,6 +152,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fea0ab5c54b38d4491f92ffe5d57da7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114759727276673286
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1292460399706130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f70dc5f4f787834589601dc2cdb9712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  asdasd: 0
 --- !u!136 &136645962927455634
 CapsuleCollider:
   m_ObjectHideFlags: 1

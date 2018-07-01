@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Pick : MonoBehaviour {
     public bool onHold = false;
-    private bool beenHit = false;
-    private bool zOffsetSet = false;
+    //private bool beenHit = false;
+    //private bool zOffsetSet = false;
     private float zOffset = 0;
     private float liftHeight { get { return 5 + zOffset; } }
     private Vector3 oldPosition;
