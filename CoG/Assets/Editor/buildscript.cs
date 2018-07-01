@@ -22,7 +22,10 @@ public class BuildCommand : MonoBehaviour
     static BuildTarget[] targetToBuildAll =
     {
         //BuildTarget.Android,
-        BuildTarget.StandaloneWindows64
+        BuildTarget.StandaloneWindows,
+        BuildTarget.StandaloneWindows64,
+        BuildTarget.StandaloneLinux,
+        BuildTarget.StandaloneLinux64
     };
  
     public static string ProductName

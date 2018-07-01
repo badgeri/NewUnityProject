@@ -1,14 +1,16 @@
-
 UNITY=/c/Program\ Files/Unity/Editor/Unity.exe
 PATH = `pwd`
 
-echo: force
-	echo ${PATH}
 build: force
-	${UNITY} -batchmode -quit -projectPath ${PATH} -executeMethod BuildCommand.BuildWin64
+	${UNITY} -batchmode -quit -projectPath ${PATH} -executeMethod BuildCommand.BuildAll
 
-runTests: force
-	${UNITY} -batchmode -quit -projectPath ${PATH} -batchmode -runTests -testPlatform playmode -testResults ${PATH}/testresults.xml -logFile ${PATH}/logfile_tests.txt
-
-force:
+runTests: playmode editmode checklogs
 	
+playmode:
+	- ${UNITY} -batchmode -projectPath ${PATH} -runTests -testPlatform playmode -testResults ${PATH}/Build/log/testresults_playmode.xml -logFile ${PATH}/Build/log/logfile_playmode.txt
+
+editmode:
+	- ${UNITY} -batchmode -projectPath ${PATH} -runEditorTests -editorTestsResultFile ${PATH}/Build/log/testresults_editormode.xml -logFile ${PATH}/Build/log/logfile_editormode.txt
+
+checklogs:
+	/usr/bin/grep.exe -e "failed=\"[1-9]" ${PATH}/Build/log/testresults_*mode.xml | echo "Failing tests" && exit 1 || /usr/bin/echo success
