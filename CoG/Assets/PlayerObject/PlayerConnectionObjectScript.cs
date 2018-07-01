@@ -19,7 +19,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     [SyncVar]
     private bool isReady = false;
     [SyncVar]
-    private bool isPlayersTurn = true;
+    public bool isPlayersTurn = true;
 
     // Use this for initialization
     void Start () {
