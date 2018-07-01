@@ -21,13 +21,13 @@ public class OnTriggerWood : NetworkBehaviour
         }
     }
 
-    void GivePlayerWood(GameObject gObject)
+    private void GivePlayerWood(GameObject gObject)
     {
         gObject.GetComponent<PlayerConnectionObjectScript>().SetWood(200);
     }
 
     [Command]
-    void CmdDestroyGameObject(GameObject gObject)
+    private void CmdDestroyGameObject(GameObject gObject)
     {
         Destroy(gObject);
     }

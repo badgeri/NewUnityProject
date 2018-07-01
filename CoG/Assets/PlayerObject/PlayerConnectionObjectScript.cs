@@ -9,7 +9,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
 
     [SyncVar]
-    bool shouldInitializePlayerUnit = false;
+    private bool shouldInitializePlayerUnit = false;
     [SyncVar]
     public int Money;
     [SyncVar]
@@ -19,7 +19,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     [SyncVar]
     private bool isReady = false;
     [SyncVar]
-    public bool isPlayersTurn = true;
+    private bool isPlayersTurn = true;
 
     // Use this for initialization
     void Start () {
@@ -137,7 +137,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     ///Special functions that ONLY get executed on the server.
     ///
     [Command]
-    void CmdSpawnMyUnit() {
+    private void CmdSpawnMyUnit() {
 
         // We are guaranteed to be on the server right now.
         PlayerUnitPrefab = Instantiate(PlayerUnitPrefab);
@@ -149,7 +149,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     }     
 
     [Command]
-    void CmdChangePlayerName(string n) {
+    private void CmdChangePlayerName(string n) {
         Debug.Log("CmdChangePlayerName: " + n);
         RpcChangePlayerName(n);
     }
@@ -189,7 +189,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     ///
 
     [ClientRpc]
-    void RpcChangePlayerName(string n) {
+    private void RpcChangePlayerName(string n) {
         Debug.Log("RpcChangePlayerName: We were asked to change the player name on a particular PlayerConnectionObject" + n);
         PlayerName = n;
     }

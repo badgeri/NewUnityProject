@@ -21,13 +21,13 @@ public class OnTriggerGold : NetworkBehaviour
         }
     }
 
-    void GivePlayerGold(GameObject gObject)
+    private void GivePlayerGold(GameObject gObject)
     {
         gObject.GetComponent<PlayerConnectionObjectScript>().SetMoney(200);
     }
 
     [Command]
-    void CmdDestroyGameObject(GameObject gObject)
+    private void CmdDestroyGameObject(GameObject gObject)
     {
         Destroy(gObject);
     }

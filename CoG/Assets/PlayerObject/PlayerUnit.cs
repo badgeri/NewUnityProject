@@ -58,7 +58,7 @@ public class PlayerUnit : NetworkBehaviour {
     }
 
     [Command]
-    void CmdSetParentNetworkId(NetworkInstanceId networkId)
+    private void CmdSetParentNetworkId(NetworkInstanceId networkId)
     {
         parentNetworkId = networkId;
     }

@@ -20,7 +20,7 @@ public class OnTriggerGoldMine : NetworkBehaviour
         }
     }
 
-    void GivePlayerGoldMine(GameObject gObject)
+    private void GivePlayerGoldMine(GameObject gObject)
     {
         gObject.GetComponent<PlayerConnectionObjectScript>().SetGoldMine(1);
     }

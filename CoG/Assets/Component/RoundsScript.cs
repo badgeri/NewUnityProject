@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class RoundsScript : MonoBehaviour {
 
-    bool hasStarted = false;
-    int nrOfPlayers;
-    int currentPlayersTurn;
-    int currentDay;
-    int currentWeek;
+    private bool hasStarted = false;
+    private int nrOfPlayers;
+    private int currentPlayersTurn;
+    private int currentDay;
+    private int currentWeek;
 
     // Use this for initialization
     void Start()
