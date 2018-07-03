@@ -6,9 +6,14 @@ using UnityEngine.Networking;
 public class PlayerConnectionObjectScript : NetworkBehaviour {
     public GameObject PlayerUnitPrefab;
     public string PlayerName = "Anonymous";
-    
+
+
+    [SyncVar]
+    private bool shouldInitializePlayerUnit = false;
     [SyncVar]
     public int Money;
+    [SyncVar]
+    public int GoldMine;
     [SyncVar]
     public int Wood;
     [SyncVar]
@@ -31,6 +36,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         // Command the server to spawn my unit
         CmdSpawnMyUnit();
         CmdSetMoney(0);
+        CmdSetGoldMine(0);
         CmdSetWood(0);
     }
 
@@ -53,6 +59,22 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 		// Remember: Update runs on everyones computer, whether or not they own this particular player object.
         if (isLocalPlayer == false) {
             return;
+        }
+
+        if (shouldInitializePlayerUnit)
+        {
+            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("PlayerUnit");
+            foreach (GameObject gObject in gameObjects)
+            {
+                if (gObject.GetComponent<PlayerUnit>().hasAuthority)
+                {
+                    if (gObject.GetComponent<PlayerUnit>().setParentNetworkId(netId)) //// <---- does not work, PlayerUnitPrefab is not the instance that is created!!!
+                    {
+                        shouldInitializePlayerUnit = false;
+                    }
+
+                }
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.S)) {
@@ -91,45 +113,72 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         isPlayersTurn = isTurn;
     }
 
+    public void SetMoney(int amount)
+    {
+        CmdSetMoney(amount);
+    }
+
+    public void SetWood(int amount)
+    {
+        CmdSetWood(amount);
+    }
+
+    public void SetGoldMine(int amount)
+    {
+        CmdSetGoldMine(amount);
+    }
+
+    public void newDay()
+    {
+        CmdSetMoney(GoldMine * 100);
+    }
 
     ///COMMANDS
     ///Special functions that ONLY get executed on the server.
     ///
     [Command]
-    void CmdSpawnMyUnit() {
+    private void CmdSpawnMyUnit() {
 
         // We are guaranteed to be on the server right now.
         PlayerUnitPrefab = Instantiate(PlayerUnitPrefab);
 
         // Now that the object exists on the server, propagate it to all the clients and also wire up the NetworkIdentity.
         NetworkServer.SpawnWithClientAuthority(PlayerUnitPrefab, connectionToClient);
-    }
+
+        shouldInitializePlayerUnit = true;
+    }     
 
     [Command]
-    void CmdChangePlayerName(string n) {
+    private void CmdChangePlayerName(string n) {
         Debug.Log("CmdChangePlayerName: " + n);
         RpcChangePlayerName(n);
     }
 
     [Command]
-    public void CmdSetMoney(int amount) {
+    private void CmdSetMoney(int amount) {
         Money += amount;
     }
 
     [Command]
-    public void CmdSetWood(int amount)
+    private void CmdSetWood(int amount)
     {
         Wood += amount;
     }
 
     [Command]
-    public void CmdSetIsReady(bool ready)
+    private void CmdSetGoldMine(int amount)
+    {
+        GoldMine += amount;
+    }
+
+    [Command]
+    private void CmdSetIsReady(bool ready)
     {
         isReady = ready;
     }
 
     [Command]
-    public void CmdSetTurnDone()
+    private void CmdSetTurnDone()
     {
         GameObject.FindGameObjectWithTag("RoundManager").GetComponent<RoundsScript>().playerTurnDone();
     }
@@ -140,7 +189,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     ///
 
     [ClientRpc]
-    void RpcChangePlayerName(string n) {
+    private void RpcChangePlayerName(string n) {
         Debug.Log("RpcChangePlayerName: We were asked to change the player name on a particular PlayerConnectionObject" + n);
         PlayerName = n;
     }

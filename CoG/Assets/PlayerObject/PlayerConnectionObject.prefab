@@ -72,7 +72,7 @@ MonoBehaviour:
     i14: 19
     i15: 239
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114782556019215626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -86,5 +86,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerUnitPrefab: {fileID: 1656871947632704, guid: f45a2b8f66c33e840be6e4342d7d0047,
     type: 2}
-  Money: 0
   PlayerName: Anonymous
+  Money: 0
+  Wood: 0

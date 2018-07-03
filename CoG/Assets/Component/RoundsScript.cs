@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class RoundsScript : MonoBehaviour {
 
-    bool hasStarted = false;
-    int nrOfPlayers;
-    int currentPlayersTurn;
+    private bool hasStarted = false;
+    private int nrOfPlayers;
+    private int currentPlayersTurn;
+    private int currentDay;
+    private int currentWeek;
 
     // Use this for initialization
     void Start()
     {
-
+        currentDay = 1;
+        currentWeek = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        //todo - should add "hasAuthority" to methods?
+
+
         if (!hasStarted)
         {
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
@@ -50,6 +57,7 @@ public class RoundsScript : MonoBehaviour {
         if (currentPlayersTurn == nrOfPlayers)
         {
             gameObjects[0].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
+            nextDay();
             currentPlayersTurn = 1;
         }
         else
@@ -57,5 +65,25 @@ public class RoundsScript : MonoBehaviour {
             gameObjects[currentPlayersTurn].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
             currentPlayersTurn++;
         }
+    }
+
+    private void nextDay()
+    {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject gObject in gameObjects)
+        {
+            gObject.GetComponent<PlayerConnectionObjectScript>().newDay();
+        }
+
+        if (currentDay % 7 == 0)
+        {
+            nextWeek();
+        }
+        currentDay++;
+    }
+
+    private void nextWeek()
+    {
+        currentWeek++;
     }
 }

@@ -9,6 +9,9 @@ public class PlayerUnit : NetworkBehaviour {
 
     private bool isInitialized = false;
 
+    [SyncVar]
+    public NetworkInstanceId parentNetworkId;
+
 	// Use this for initialization
 	void Start () {
     }
@@ -18,7 +21,7 @@ public class PlayerUnit : NetworkBehaviour {
 	void Update () {
 
         //Verify that user is allowed to control object
-        if (hasAuthority == false) {
+        if (!hasAuthority) {
             return;
         }
 
@@ -38,8 +41,25 @@ public class PlayerUnit : NetworkBehaviour {
         }
 	}
 
+    public bool setParentNetworkId(NetworkInstanceId networkId)
+    {
+        if (!hasAuthority)
+        {
+            return false;
+        }
+
+        CmdSetParentNetworkId(networkId);
+        return true;
+    }
+
     public bool hasCallerAuthority()
     {
         return hasAuthority;
+    }
+
+    [Command]
+    private void CmdSetParentNetworkId(NetworkInstanceId networkId)
+    {
+        parentNetworkId = networkId;
     }
 }

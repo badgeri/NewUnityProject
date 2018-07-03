@@ -34,7 +34,7 @@ public class Pathfinding : NetworkBehaviour
 
             foreach (GameObject gObject in gameObjects)
             {
-                if (gameObject.transform.root.GetComponent<PlayerUnit>().netId == gObject.GetComponent<PlayerConnectionObjectScript>().PlayerUnitPrefab.GetComponent<PlayerUnit>().netId) ///TODO set this in the constructor so we dont have to do this loop every time... //Todo2 isnt working for multiplayer??
+                if (GetComponentInParent<PlayerUnit>().parentNetworkId == gObject.GetComponent<PlayerConnectionObjectScript>().netId)
                 {
                     if (!gObject.GetComponent<PlayerConnectionObjectScript>().getIsPlayersTurn())
                     {
