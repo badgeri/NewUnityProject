@@ -84,7 +84,6 @@ public class Playground : MonoBehaviour {
                 Vector3 worldPoint = worldLeftBottom + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
                 bool walkable = !(Physics.CheckSphere(worldPoint, safeRadius, unWalkableMask));
                 grid[x, y] = new Node(walkable, worldPoint, x, y);
-                //if (!walkable) print("Create grid " + x + " " + y);
             }
         }
     }
@@ -137,7 +136,6 @@ public class Playground : MonoBehaviour {
                 isItSelf = false;
                 for (y = Ymin; y <= Ymax; y++)
                 {
-                    //print("index1n " + (x) + " " + (y));
                     nNonWalkable = CheckIfNodeIsCollidingWithObject(ref isItSelf, grid[x, y], movedObject);
                     grid[x, y].walkable = !nNonWalkable;
                 }
@@ -157,7 +155,6 @@ public class Playground : MonoBehaviour {
                 isItSelf = false;
                 for (x = Xmin; x <= Xmax; x++)
                 {
-                    //print("index2n " + (x) + " " + (y));
                     nNonWalkable = CheckIfNodeIsCollidingWithObject(ref isItSelf, grid[x, y], movedObject);
                     grid[x, y].walkable = !nNonWalkable;
                 }
@@ -176,7 +173,6 @@ public class Playground : MonoBehaviour {
                     isItSelf = false;
                     for (y = Ymin; y <= Ymax; y++)
                     {
-                        //print("index3n " + (x) + " " + (y));
                         nNonWalkable = CheckIfNodeIsCollidingWithObject(ref isItSelf, grid[x, y], movedObject);
                         grid[x, y].walkable = !nNonWalkable;
                     }
@@ -195,7 +191,6 @@ public class Playground : MonoBehaviour {
                     isItSelf = false;
                     for (x = Xmin; x <= Xmax; x++)
                     {
-                        //print("index4n " + (x) + " " + (y));
                         nNonWalkable = CheckIfNodeIsCollidingWithObject(ref isItSelf, grid[x, y], movedObject);
                         grid[x, y].walkable = !nNonWalkable;
                     }
@@ -203,7 +198,6 @@ public class Playground : MonoBehaviour {
                     else top = 0;
                 }
             }
-            //print(left + " " + bottom + " " + right + " " + top);
         }
     }
 

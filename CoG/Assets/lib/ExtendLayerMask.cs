@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ExtendLayerMask{
-    public static int GhostMask { get { return 31; } }
-    public static int UI { get { return 5; } }
+    public static int GhostMask { get { return LayerMask.NameToLayer("GhostMask"); } }
+    public static int UI { get { return LayerMask.NameToLayer("UI"); } }
+    public static int UnWalkable { get { return LayerMask.NameToLayer("unWalkableMask"); } }
+    public static int Ground { get { return LayerMask.NameToLayer("Ground"); } }
 }
