@@ -186,6 +186,10 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     [Command]
     public void CmdSetClientAuthority(NetworkIdentity identity)
     {
+        if(identity.clientAuthorityOwner != null)
+        {
+            identity.RemoveClientAuthority(identity.clientAuthorityOwner);
+        }
         identity.AssignClientAuthority(connectionToClient);
     }
 

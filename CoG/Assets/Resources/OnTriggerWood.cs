@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class OnTriggerWood : NetworkBehaviour
 {
+    private bool destroyObject = false;
     void OnTriggerEnter(Collider collider)
     {
         GameObject gObject;
@@ -12,19 +13,23 @@ public class OnTriggerWood : NetworkBehaviour
         {
             gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetClientAuthority(this.gameObject.GetComponent<NetworkIdentity>());
             GivePlayerWood(gObject);
+            destroyObject = true;
         }
     }
 
     void OnTriggerStay(Collider collider)
     {
-        GameObject gObject;
-        if (HandlerPlayer.ActiveGameObject(collider, out gObject))
+        if (destroyObject)
         {
-            if (hasAuthority)
+            GameObject gObject;
+            if (HandlerPlayer.ActiveGameObject(collider, out gObject))
             {
-                if (this.gameObject)
+                if (hasAuthority)
                 {
-                    CmdDestroyGameObject(this.gameObject);
+                    if (this.gameObject)
+                    {
+                        CmdDestroyGameObject(this.gameObject);
+                    }
                 }
             }
         }
