@@ -7,17 +7,11 @@ public class OnTriggerWood : NetworkBehaviour
 {
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "Playerobject")
+        GameObject gObject;
+        if (HandlerPlayer.ActiveGameObject(collider, out gObject))
         {
             CmdDestroyGameObject(this.gameObject);
-            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject gObject in gameObjects)
-            {
-                if (collider.GetComponentInParent<PlayerUnit>().parentNetworkId == gObject.GetComponent<PlayerConnectionObjectScript>().netId && gObject.GetComponent<PlayerConnectionObjectScript>().hasAuthority) 
-                {
-                    GivePlayerWood(gObject);
-                }
-            }
+            GivePlayerWood(gObject);
         }
     }
 

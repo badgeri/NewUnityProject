@@ -7,20 +7,14 @@ public class OnTriggerGoldMine : NetworkBehaviour
 {
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "Playerobject")
+        GameObject gObject;
+        if(HandlerPlayer.ActiveGameObject(collider, out gObject))
         {
             if(gameObject.GetComponent<GoldMineScript>().getOwnerNetworkId() == collider.GetComponentInParent<PlayerUnit>().parentNetworkId) // todo - doesnt work!! getOwnerNetworkId, networkid for goldmine doesnt sync?
             {
                 return;
             }
-            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject gObject in gameObjects)
-            {
-                if (collider.GetComponentInParent<PlayerUnit>().parentNetworkId == gObject.GetComponent<PlayerConnectionObjectScript>().netId && gObject.GetComponent<PlayerConnectionObjectScript>().hasAuthority)
-                {
-                    GivePlayerGoldMine(gObject);
-                }
-            }
+            GivePlayerGoldMine(gObject);
         }
     }
 
