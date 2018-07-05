@@ -5,13 +5,33 @@ using UnityEngine.Networking;
 
 public class OnTriggerGold : NetworkBehaviour
 {
+    private bool destroyObject = false;
     void OnTriggerEnter(Collider collider)
     {
         GameObject gObject;
         if (HandlerPlayer.ActiveGameObject(collider, out gObject))
         {
-            CmdDestroyGameObject(this.gameObject);
+            gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetClientAuthority(this.gameObject.GetComponent<NetworkIdentity>()); 
             GivePlayerGold(gObject);
+            destroyObject = true;
+        }
+    }
+
+    void OnTriggerStay(Collider collider)
+    {
+        if (destroyObject)
+        {
+            GameObject gObject;
+            if (HandlerPlayer.ActiveGameObject(collider, out gObject))
+            {
+                if (hasAuthority)
+                {
+                    if (this.gameObject)
+                    {
+                        CmdDestroyGameObject(this.gameObject);
+                    }
+                }
+            }
         }
     }
 
