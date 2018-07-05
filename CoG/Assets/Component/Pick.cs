@@ -24,7 +24,7 @@ public class Pick : MonoBehaviour {
         {
             if (!Input.GetMouseButtonUp(0))
             {
-                pickupObject();
+                PickupObject();
                 //print("not Mouse up");
             }
             else
@@ -50,55 +50,42 @@ public class Pick : MonoBehaviour {
         }
         else if (Input.GetMouseButtonDown(0))
         {
-            int tmpMask = gameObject.layer;
-            gameObject.layer = ExtendLayerMask.GhostMask;
-            grid.UpdateGrid(gameObject);
-            gameObject.layer = tmpMask;
-            pickupObject();
+            RaycastHit hitInfo = new RaycastHit();
+            if (IsPickable(out hitInfo))
+            {
+                int tmpMask = gameObject.layer;
+                gameObject.layer = ExtendLayerMask.GhostMask;
+                grid.UpdateGrid(gameObject);
+                gameObject.layer = tmpMask;
+                PickupObject();
+            }
         }
     }
 
-    //store gameObject reference
-
-    void createGostMesh(GameObject original, out GameObject ghostMesh)
+    private bool IsPickable(out RaycastHit hitInfo)
     {
-        //spawn object
-        ghostMesh = new GameObject("Cool GameObject made from Code");
-        ghostMesh.AddComponent<MeshCollider>();
-        ghostMesh.layer = ExtendLayerMask.GhostMask;
-        ghostMesh.transform.localScale = gameObject.transform.localScale;
-        ghostMesh.transform.position = gameObject.transform.position + Vector3.back * 2;
-        ghostMesh.transform.rotation = gameObject.transform.rotation;
-        Mesh m = ((MeshFilter) original.gameObject.GetComponent("MeshFilter")).mesh;
-        ((MeshCollider)ghostMesh.GetComponent<MeshCollider>()).sharedMesh = m;
-//        ((MeshCollider)ghostMesh.GetComponent<MeshCollider>()).convex = true;
-    }
-        private void pickupObject()
-    {
-        RaycastHit hitInfo = new RaycastHit();
         bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
-        if (hit)
-        {
-            if (hitInfo.transform.GetInstanceID() == transform.GetInstanceID())
-            {
-                gameObject.isStatic = false;
+        if (hitInfo.transform.gameObject.layer == ExtendLayerMask.UI) return false;
+        if (hitInfo.transform.gameObject == gameObject) return true;
+        return false;
+    }
 
-                hit = Physics.Raycast(transform.position, Vector3.down, out hitInfo, 100.0f);
-                if (hit && !onHold)
-                {
-                    //print("reset zOffset ");
-                    //print(hitInfo.transform.position);
-                    //print(transform.position);
-                    zOffset = (transform.position - hitInfo.transform.position).y;
-                }
-                onHold = true;
-            }
-            if (onHold)
-            {
-                //Have a hitpoint on ground so we lift the object
-                //print("onHold " + liftHeight);
-                transform.SetPositionAndRotation(hitInfo.point + Vector3.up * liftHeight, transform.rotation);
-            }
+    private void PickupObject()
+    {
+        gameObject.isStatic = false;
+
+        RaycastHit hitInfo;
+        bool hit = Physics.Raycast(transform.position, Vector3.down, out hitInfo, 100.0f);
+        if (hit && !onHold)
+        {
+            zOffset = (transform.position - hitInfo.transform.position).y;
+        }
+        onHold = true;
+        if (onHold)
+        {
+            //Have a hitpoint on ground so we lift the object
+            //print("onHold " + liftHeight);
+            transform.SetPositionAndRotation(hitInfo.point + Vector3.up * liftHeight, transform.rotation);
         }
     }
 }

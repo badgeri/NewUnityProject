@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class ExtendLayerMask{
     public static int GhostMask { get { return 31; } }
-
+    public static int UI { get { return 5; } }
 }
