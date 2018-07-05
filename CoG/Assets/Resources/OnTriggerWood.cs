@@ -10,8 +10,23 @@ public class OnTriggerWood : NetworkBehaviour
         GameObject gObject;
         if (HandlerPlayer.ActiveGameObject(collider, out gObject))
         {
-            CmdDestroyGameObject(this.gameObject);
+            gObject.GetComponent<PlayerConnectionObjectScript>().CmdSetClientAuthority(this.gameObject.GetComponent<NetworkIdentity>());
             GivePlayerWood(gObject);
+        }
+    }
+
+    void OnTriggerStay(Collider collider)
+    {
+        GameObject gObject;
+        if (HandlerPlayer.ActiveGameObject(collider, out gObject))
+        {
+            if (hasAuthority)
+            {
+                if (this.gameObject)
+                {
+                    CmdDestroyGameObject(this.gameObject);
+                }
+            }
         }
     }
 

@@ -183,6 +183,12 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         GameObject.FindGameObjectWithTag("RoundManager").GetComponent<RoundsScript>().playerTurnDone();
     }
 
+    [Command]
+    public void CmdSetClientAuthority(NetworkIdentity identity)
+    {
+        identity.AssignClientAuthority(connectionToClient);
+    }
+
 
     ///RPC
     ///Special functions that ONLY get executed on the clients.
