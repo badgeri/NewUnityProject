@@ -12,6 +12,7 @@ public class Pathfinding : NetworkBehaviour
     private Vector3 dirToFirstNodeInPath = new Vector3();
     private Vector3 targetPosition = new Vector3();
     private bool isOrderedToMove = false;
+    private LayerMask notGroundMask = 0;
     //private GameObject relatedPlayerConnectionObject;
 
     // Use this for initialization
@@ -19,6 +20,7 @@ public class Pathfinding : NetworkBehaviour
     {
         // Remember: Update runs on everyones computer, whether or not they own this particular player object.
         grid = GameObject.FindWithTag("Playground").GetComponent<Playground>();
+        notGroundMask = 1 << ExtendLayerMask.UI | 1 << ExtendLayerMask.UnWalkable;
     }
 
     void Update(){
@@ -185,15 +187,18 @@ public class Pathfinding : NetworkBehaviour
         direction = node.worldPosition - transform.position;
         direction.Normalize();
     }
-    
+
     private bool setPositionFromMouseClick()
     {
         RaycastHit hitInfo;
         //If the ray hits an object
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, 100))
         {
-            targetPosition = hitInfo.point;
-            return true;
+            if (((1 << hitInfo.transform.gameObject.layer) & notGroundMask) == 0)
+            {
+                targetPosition = hitInfo.point;
+                return true;
+            }
         }
         return false;
     }
