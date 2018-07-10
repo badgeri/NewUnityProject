@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
-public class Pathfinding : NetworkBehaviour
+public class Pathfinding : MonoBehaviour
 {
 
 	public Playground grid;
+    public Material playerLocator;
+    public Material targetLocator;
 
     private float mMaxVelocity = 10f;
     private float mCurrentVelocity = 0;
@@ -13,6 +16,12 @@ public class Pathfinding : NetworkBehaviour
     private Vector3 targetPosition = new Vector3();
     private bool isOrderedToMove = false;
     private LayerMask notGroundMask = 0;
+    private bool objectIsSelected = false;
+    private bool isAllowedToMove = false;
+    public GameObject player_canvas = null;
+    public GameObject target_canvas = null;
+    private static int selectedOwner = 0;
+
     //private GameObject relatedPlayerConnectionObject;
 
     // Use this for initialization
@@ -21,17 +30,21 @@ public class Pathfinding : NetworkBehaviour
         // Remember: Update runs on everyones computer, whether or not they own this particular player object.
         grid = GameObject.FindWithTag("Playground").GetComponent<Playground>();
         notGroundMask = 1 << ExtendLayerMask.UI | 1 << ExtendLayerMask.UnWalkable;
+        if (target_canvas == null && player_canvas == null)
+        {
+            GameObject parent = new GameObject();
+            parent.name = "LocaterCanvases";
+            target_canvas = createLocator(parent, targetLocator);
+            player_canvas = createLocator(parent, playerLocator);
+            setActivePlayerLocator(false);
+            setActiveTargetLocator(Vector3.zero, false);
+        }
     }
 
     void Update(){
         // Remember: Update runs on everyones computer, whether or not they own this particular player object.
         if (GetComponent<NetworkIdentity>() != null)
         {
-            if (hasAuthority == false)
-            {
-                return;
-            }
-
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
 
             foreach (GameObject gObject in gameObjects)
@@ -48,10 +61,54 @@ public class Pathfinding : NetworkBehaviour
 
         //find new mouse input
         if (Input.GetMouseButtonDown(0)) {
-            if (!setPositionFromMouseClick())
-                return;
-            FindPath(transform.position, targetPosition);
-            isOrderedToMove = true;
+            if (IsOwner())
+            {
+                if (selectedObject())
+                {
+                    if (isAllowedToMove)
+                    {
+                        Vector3? tmp = getPositionFromMouseClick();
+                        if (tmp.HasValue) // check if it is a double click on same
+                        {
+                            Node n1 = grid.NodeFromWorldPoint(tmp.Value);
+                            Node n2 = grid.NodeFromWorldPoint(targetPosition);
+                            if (Node.Equal(n1, n2))
+                            {
+                                isOrderedToMove = true;
+                            }
+                            else
+                            {
+                                targetPosition = tmp.Value;
+                                isOrderedToMove = false;
+                                FindPath(transform.position, targetPosition);
+                                setActiveTargetLocator(targetPosition, true);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        isAllowedToMove = setPositionFromMouseClick();
+                        if (isAllowedToMove)
+                        {
+                            FindPath(transform.position, targetPosition);
+                            setActiveTargetLocator(targetPosition, true);
+                        }
+                    }
+                }
+                else
+                {
+                    setActiveTargetLocator(Vector3.zero, false);
+                    isAllowedToMove = false;
+                    isOrderedToMove = false;
+                }
+            }
+            else
+            {
+                selectedObject(); // to select object first
+                setActiveTargetLocator(Vector3.zero, false);
+                isAllowedToMove = false;
+                isOrderedToMove = false;
+            }
         }
 
         //if grid has been updated
@@ -62,18 +119,31 @@ public class Pathfinding : NetworkBehaviour
         }
 
         //if we have a grid path
-        if (grid.path != null && isOrderedToMove)
+        if (grid.path != null && isOrderedToMove && IsOwner())
         {
             UpdateTravelDirection(grid.path);
 
-            if(grid.path.Count > 0) {
+            if (grid.path.Count > 0)
+            {
                 CalculateAndUpdateVelocity(dirToFirstNodeInPath);
             }
-            else {
+            else
+            {
                 GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
                 isOrderedToMove = false;
+                setActiveTargetLocator(Vector3.zero, false);
             }
         }
+        else if (GetComponent<Rigidbody>().velocity.magnitude > 0)
+        {
+            GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            isOrderedToMove = false;
+        }
+    }
+
+    private bool IsOwner()
+    {
+        return selectedOwner == transform.GetInstanceID();
     }
 
 	void FindPath (Vector3 startPos, Vector3 targetPos) {
@@ -144,6 +214,8 @@ public class Pathfinding : NetworkBehaviour
     /// <param name="path"></param>
     /// <returns></returns>
     private Vector3 mPathDir = new Vector3();
+    private float fTextLabelHeight = 10f;
+
     private void UpdateTravelDirection(List<Node> path)
     {
         if (path.Count == 0) return;
@@ -188,15 +260,127 @@ public class Pathfinding : NetworkBehaviour
         direction.Normalize();
     }
 
+    private GameObject createLocator(GameObject parent, Material material)
+    {
+        string objectName = "CircularCanvas" + material;
+
+        GameObject g = new GameObject();
+        Canvas canvas = g.AddComponent<Canvas>();
+        CanvasScaler cs = g.AddComponent<CanvasScaler>();
+        GraphicRaycaster gr = g.AddComponent<GraphicRaycaster>();
+        g.name = objectName;
+        g.transform.SetParent(parent.transform, false);
+        g.transform.localPosition = new Vector3(0f, 0f, 0f);
+        g.transform.localScale = new Vector3(
+                                             1.0f / this.transform.localScale.x * 1f,
+                                             1.0f / this.transform.localScale.y * 1f,
+                                             1.0f / this.transform.localScale.z * 1f);
+        canvas.renderMode = RenderMode.WorldSpace;
+        cs.scaleFactor = 10.0f;
+        cs.dynamicPixelsPerUnit = 10f;
+        g.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 3.0f);
+        g.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 3.0f);
+        GameObject g2 = new GameObject();
+        LineRenderer lineRenderer = g2.AddComponent<LineRenderer>();
+        g2.name = "Circle";
+        g2.transform.SetParent(g.transform, false);
+
+        float theta_scale = 0.1f;             //Set lower to add more points
+        int size = (int)((2.0 * Mathf.PI) / theta_scale); //Total number of points in circle.
+
+        lineRenderer.material = new Material(material);
+        lineRenderer.startColor = Color.black;
+        lineRenderer.endColor = Color.black;
+        lineRenderer.startWidth = 0.5f;
+        lineRenderer.endWidth = 0.5f;
+        lineRenderer.positionCount = size;
+        lineRenderer.loop = true;
+        lineRenderer.useWorldSpace = false;
+
+        float theta = 0;
+        float x, y;
+        float r = 1.2f;
+        for (int i = 0; i < size; i++, theta += theta_scale )
+        {
+            x = r * Mathf.Cos(theta);
+            y = r * Mathf.Sin(theta);
+
+            Vector3 pos = new Vector3(x, 0, y);
+            lineRenderer.SetPosition(i, pos);
+        }
+        return g;
+    }
+
+    private void setActiveTargetLocator(Vector3 pos, bool active)
+    {
+        if (target_canvas == null) return;
+        if (selectedOwner == transform.GetInstanceID())
+        {
+            target_canvas.transform.position = pos + Vector3.up * 0.5f;
+            target_canvas.SetActive(active);
+        }
+        else if( selectedOwner == 0)
+            target_canvas.SetActive(false);
+    }
+
+    private void setActivePlayerLocator(bool active)
+    {
+        if (player_canvas == null) return; //sanity
+        if (selectedOwner == transform.GetInstanceID())
+        {
+            player_canvas.transform.SetParent(transform);
+            player_canvas.transform.localPosition = Vector3.up * 0.5f;
+            player_canvas.SetActive(active);
+        }
+        else if( selectedOwner == 0)
+            player_canvas.SetActive(false);
+            
+    }
+
+    private bool selectedObject()
+    {
+        //If the ray hits an object or hitInfo is up to date
+        if (RaycastHandler.Update())
+        {
+            if (RaycastHandler.hitInfo.transform.gameObject == gameObject)
+            {
+                // if same object is select, toggle if it is selected
+                objectIsSelected = !objectIsSelected;
+                if (objectIsSelected)
+                    //which local gameobject is the owner
+                    selectedOwner = transform.GetInstanceID();
+                else selectedOwner = 0;
+
+                setActivePlayerLocator(objectIsSelected);
+            }
+            else if (RaycastHandler.hitInfo.transform.gameObject.GetComponent<Pathfinding>())
+            {
+                //hit another object with pathfinding, unselect the selected object
+                objectIsSelected = false;
+            }
+        }
+        return objectIsSelected;
+    }
+    
+    private Vector3? getPositionFromMouseClick()
+    {
+        if (RaycastHandler.Update())
+        {
+            if (((1 << RaycastHandler.hitInfo.transform.gameObject.layer) & notGroundMask) == 0)
+            {
+                return RaycastHandler.hitInfo.point;
+            }
+        }
+        return null;
+    }
     private bool setPositionFromMouseClick()
     {
-        RaycastHit hitInfo;
         //If the ray hits an object
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, 100))
+        if (RaycastHandler.Update())
         {
-            if (((1 << hitInfo.transform.gameObject.layer) & notGroundMask) == 0)
+            if (((1 << RaycastHandler.hitInfo.transform.gameObject.layer) & notGroundMask) == 0)
             {
-                targetPosition = hitInfo.point;
+                targetPosition = RaycastHandler.hitInfo.point;
                 return true;
             }
         }
