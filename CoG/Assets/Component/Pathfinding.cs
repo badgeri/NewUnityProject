@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-//public class Pathfinding : NetworkBehaviour
 public class Pathfinding : MonoBehaviour
 {
 
