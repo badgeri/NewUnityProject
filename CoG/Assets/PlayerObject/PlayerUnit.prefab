@@ -177,6 +177,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 0}
+  playerLocator: {fileID: 2100000, guid: e935dab02f0cdc54796cfb133d5fbf4c, type: 2}
+  targetLocator: {fileID: 2100000, guid: bd8b3ba1f9758c94ba3bd189d2c558fe, type: 2}
+  player_canvas: {fileID: 0}
+  target_canvas: {fileID: 0}
 --- !u!114 &114916488345418870
 MonoBehaviour:
   m_ObjectHideFlags: 1

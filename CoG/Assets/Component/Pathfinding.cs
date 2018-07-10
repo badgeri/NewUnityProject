@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class Pathfinding : NetworkBehaviour
+//public class Pathfinding : NetworkBehaviour
+public class Pathfinding : MonoBehaviour
 {
 
 	public Playground grid;
+    public Material playerLocator;
+    public Material targetLocator;
 
     private float mMaxVelocity = 10f;
     private float mCurrentVelocity = 0;
@@ -16,8 +19,8 @@ public class Pathfinding : NetworkBehaviour
     private LayerMask notGroundMask = 0;
     private bool objectIsSelected = false;
     private bool isAllowedToMove = false;
-    private static GameObject player_canvas = null;
-    private static GameObject target_canvas = null;
+    public GameObject player_canvas = null;
+    public GameObject target_canvas = null;
     private static int selectedOwner = 0;
 
     //private GameObject relatedPlayerConnectionObject;
@@ -32,8 +35,8 @@ public class Pathfinding : NetworkBehaviour
         {
             GameObject parent = new GameObject();
             parent.name = "LocaterCanvases";
-            target_canvas = createLocator(parent, Color.red, false);
-            player_canvas = createLocator(parent, Color.blue, false);
+            target_canvas = createLocator(parent, targetLocator);
+            player_canvas = createLocator(parent, playerLocator);
             setActivePlayerLocator(false);
             setActiveTargetLocator(Vector3.zero, false);
         }
@@ -43,11 +46,6 @@ public class Pathfinding : NetworkBehaviour
         // Remember: Update runs on everyones computer, whether or not they own this particular player object.
         if (GetComponent<NetworkIdentity>() != null)
         {
-            if (hasAuthority == false)
-            {
-                return;
-            }
-
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
 
             foreach (GameObject gObject in gameObjects)
@@ -263,9 +261,9 @@ public class Pathfinding : NetworkBehaviour
         direction.Normalize();
     }
 
-    private GameObject createLocator(GameObject parent, Color color, bool useWorldSpace)
+    private GameObject createLocator(GameObject parent, Material material)
     {
-        string objectName = "CircularCanvas" + color;
+        string objectName = "CircularCanvas" + material;
 
         GameObject g = new GameObject();
         Canvas canvas = g.AddComponent<Canvas>();
@@ -291,14 +289,14 @@ public class Pathfinding : NetworkBehaviour
         float theta_scale = 0.1f;             //Set lower to add more points
         int size = (int)((2.0 * Mathf.PI) / theta_scale); //Total number of points in circle.
 
-        lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
-        lineRenderer.startColor = color;
-        lineRenderer.endColor = color;
+        lineRenderer.material = new Material(material);
+        lineRenderer.startColor = Color.black;
+        lineRenderer.endColor = Color.black;
         lineRenderer.startWidth = 0.5f;
         lineRenderer.endWidth = 0.5f;
         lineRenderer.positionCount = size;
         lineRenderer.loop = true;
-        lineRenderer.useWorldSpace = useWorldSpace;
+        lineRenderer.useWorldSpace = false;
 
         float theta = 0;
         float x, y;
@@ -347,8 +345,10 @@ public class Pathfinding : NetworkBehaviour
         {
             if (RaycastHandler.hitInfo.transform.gameObject == gameObject)
             {
+                // if same object is select, toggle if it is selected
                 objectIsSelected = !objectIsSelected;
                 if (objectIsSelected)
+                    //which local gameobject is the owner
                     selectedOwner = transform.GetInstanceID();
                 else selectedOwner = 0;
 
@@ -356,6 +356,7 @@ public class Pathfinding : NetworkBehaviour
             }
             else if (RaycastHandler.hitInfo.transform.gameObject.GetComponent<Pathfinding>())
             {
+                //hit another object with pathfinding, unselect the selected object
                 objectIsSelected = false;
             }
         }
