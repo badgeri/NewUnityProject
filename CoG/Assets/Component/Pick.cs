@@ -25,7 +25,7 @@ public class Pick : MonoBehaviour {
                 if (!onHold) // first lift, clean the grid at objects location
                 {
                     int tmpMask = gameObject.layer;
-                    gameObject.layer = ExtendLayerMask.GhostMask;
+                    gameObject.layer = ExtendLayerMask.GhostMask();
                     grid.UpdateGrid(gameObject);
                     gameObject.layer = tmpMask;
                     zOffset = (transform.position - hitInfo.transform.position).y;
@@ -54,7 +54,7 @@ public class Pick : MonoBehaviour {
     {
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
         {
-            if (hitInfo.transform.gameObject.layer == ExtendLayerMask.UI) return false;
+            if (hitInfo.transform.gameObject.layer == ExtendLayerMask.UI()) return false;
             if (hitInfo.transform.gameObject == gameObject)
             {
                 return Physics.Raycast(hitInfo.point, Vector3.down, out hitInfo, 100.0f);
