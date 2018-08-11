@@ -42,6 +42,12 @@ public class Pathfinding : MonoBehaviour
     }
 
     void Update(){
+
+        if (!GetComponentInParent<PlayerUnit>().hasAuthority)
+        {
+            return;
+        }
+
         // Remember: Update runs on everyones computer, whether or not they own this particular player object.
         if (GetComponent<NetworkIdentity>() != null)
         {
