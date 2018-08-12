@@ -11,7 +11,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     [SyncVar]
     private bool shouldInitializePlayerUnit = false;
     [SyncVar]
-    public int Money;
+    public int Gold;
     [SyncVar]
     public int GoldMine;
     [SyncVar]
@@ -35,7 +35,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
 
         // Command the server to spawn my unit
         CmdSpawnMyUnit();
-        CmdSetMoney(0);
+        CmdSetGold(0);
         CmdSetGoldMine(0);
         CmdSetWood(0);
     }
@@ -68,7 +68,7 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
             {
                 if (gObject.GetComponent<PlayerUnit>().hasAuthority)
                 {
-                    if (gObject.GetComponent<PlayerUnit>().setParentNetworkId(netId)) //// <---- does not work, PlayerUnitPrefab is not the instance that is created!!!
+                    if (gObject.GetComponent<PlayerUnit>().setParentNetworkId(netId)) 
                     {
                         shouldInitializePlayerUnit = false;
                     }
@@ -113,24 +113,31 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         isPlayersTurn = isTurn;
     }
 
-    public void SetMoney(int amount)
+    public void SetGold(int amount)
     {
-        CmdSetMoney(amount);
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        CmdSetGold(amount);
     }
 
     public void SetWood(int amount)
     {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
         CmdSetWood(amount);
     }
 
     public void SetGoldMine(int amount)
     {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
         CmdSetGoldMine(amount);
-    }
-
-    public void newDay()
-    {
-        CmdSetMoney(GoldMine * 100);
     }
 
     ///COMMANDS
@@ -155,20 +162,20 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
     }
 
     [Command]
-    private void CmdSetMoney(int amount) {
-        Money += amount;
+    public void CmdSetGold(int amount) {
+        Gold = amount;
     }
 
     [Command]
     private void CmdSetWood(int amount)
     {
-        Wood += amount;
+        Wood = amount;
     }
 
     [Command]
     private void CmdSetGoldMine(int amount)
     {
-        GoldMine += amount;
+        GoldMine = amount;
     }
 
     [Command]
