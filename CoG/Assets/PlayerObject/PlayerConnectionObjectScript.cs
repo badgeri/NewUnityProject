@@ -140,11 +140,6 @@ public class PlayerConnectionObjectScript : NetworkBehaviour {
         CmdSetGoldMine(amount);
     }
 
-    public void newDay()
-    {
-        CmdSetGold(GoldMine * 100);
-    }
-
     ///COMMANDS
     ///Special functions that ONLY get executed on the server.
     ///

@@ -74,11 +74,6 @@ public class RoundsScript : MonoBehaviour {
     private void nextDay()
     {
         GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourceManagerScript>().newDay();
-        /*GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject gObject in gameObjects)
-        {
-            gObject.GetComponent<PlayerConnectionObjectScript>().newDay();
-        }*/
 
         if (currentDay % 7 == 0)
         {
