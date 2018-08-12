@@ -7,19 +7,7 @@ public class GoldMineScript : NetworkBehaviour
 {
     [SyncVar]
     public NetworkInstanceId ownerNetworkId;
-    [SyncVar]
-    public int asdasd;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void setOwner(NetworkInstanceId ownerId)
     {
         CmdSetOwner(ownerId);

@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 public class OnTriggerGoldMine : NetworkBehaviour
 {
     private bool setOwner = false;
+    private bool removeOldOwner = false;
+
     void OnTriggerEnter(Collider collider)
     {
         GameObject gObject;
@@ -16,7 +18,10 @@ public class OnTriggerGoldMine : NetworkBehaviour
             {
                 return;
             }
-            GivePlayerGoldMine(gObject);
+            else if (gameObject.GetComponent<GoldMineScript>().getOwnerNetworkId().Value != 0) //defaults to 0 for no owner
+            {
+                removeOldOwner = true;
+            }
             setOwner = true;
         }
     }
@@ -25,19 +30,33 @@ public class OnTriggerGoldMine : NetworkBehaviour
     {
         if (setOwner)
         {
-            GameObject gObject;
-            if (HandlerPlayer.ActiveGameObject(collider, out gObject))
+            GameObject playerGameObject;
+            if (HandlerPlayer.ActiveGameObject(collider, out playerGameObject))
             {
                 if (hasAuthority)
                 {
-                    gameObject.GetComponent<GoldMineScript>().setOwner(gObject.GetComponent<PlayerConnectionObjectScript>().netId);
+                    if (removeOldOwner)
+                    {
+                        CmdRemoveOldOwnerGoldMine(gameObject.GetComponent<GoldMineScript>().getOwnerNetworkId());
+                        removeOldOwner = false;
+                    }
+                    gameObject.GetComponent<GoldMineScript>().setOwner(playerGameObject.GetComponent<PlayerConnectionObjectScript>().netId);
+                    setOwner = false;
+                    CmdGivePlayerGoldMine(playerGameObject);
                 }
             }
         }
     }
 
-    private void GivePlayerGoldMine(GameObject gObject)
+    [Command]
+    private void CmdGivePlayerGoldMine(GameObject playerGameObject)
     {
-        gObject.GetComponent<PlayerConnectionObjectScript>().SetGoldMine(1);
+        GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourceManagerScript>().increasePlayerGoldMine(playerGameObject.GetComponent<PlayerConnectionObjectScript>().netId, 1);
+    }
+
+    [Command]
+    private void CmdRemoveOldOwnerGoldMine(NetworkInstanceId netId)
+    {
+        GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourceManagerScript>().decreasePlayerGoldMine(netId, 1);
     }
 }

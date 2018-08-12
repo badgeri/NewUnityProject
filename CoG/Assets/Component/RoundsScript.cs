@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class RoundsScript : MonoBehaviour {
 
@@ -40,12 +41,15 @@ public class RoundsScript : MonoBehaviour {
                 hasStarted = true;
                 nrOfPlayers = gameObjects.Length;
                 //todo need to block connecting players? 
+                List<NetworkInstanceId> networkInstanceIds = new List<NetworkInstanceId>();
                 foreach (GameObject gObject in gameObjects)
                 {
                     gObject.GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(false);
+                    networkInstanceIds.Add(gObject.GetComponent<PlayerConnectionObjectScript>().netId);
                 }
                 gameObjects[0].GetComponent<PlayerConnectionObjectScript>().setIsPlayersTurn(true);
                 currentPlayersTurn = 1;
+                GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourceManagerScript>().initializePlayerResources(networkInstanceIds);
             }
         }
     }
@@ -69,11 +73,12 @@ public class RoundsScript : MonoBehaviour {
 
     private void nextDay()
     {
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
+        GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourceManagerScript>().newDay();
+        /*GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject gObject in gameObjects)
         {
             gObject.GetComponent<PlayerConnectionObjectScript>().newDay();
-        }
+        }*/
 
         if (currentDay % 7 == 0)
         {

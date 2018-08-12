@@ -14,6 +14,7 @@ TagManager:
   - GoldMine
   - Undefined
   - PlayerUnit
+  - ResourceManager
   layers:
   - Default
   - TransparentFX
