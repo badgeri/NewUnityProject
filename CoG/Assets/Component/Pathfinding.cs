@@ -276,7 +276,6 @@ public class Pathfinding : NetworkBehaviour
         GameObject g = new GameObject();
         Canvas canvas = g.AddComponent<Canvas>();
         CanvasScaler cs = g.AddComponent<CanvasScaler>();
-        GraphicRaycaster gr = g.AddComponent<GraphicRaycaster>();
         g.name = objectName;
         g.transform.SetParent(parent.transform, false);
         g.transform.localPosition = new Vector3(0f, 0f, 0f);
