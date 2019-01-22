@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class RaycastHandler
 {
@@ -14,5 +12,5 @@ public static class RaycastHandler
         return Valid;
     }
     public static bool Valid { get { return Time.frameCount == lastUpdate; } }
-    public static RaycastHit hitInfo { get { return m_hitInfo_s; } }
+    public static RaycastHit HitInfo { get { return m_hitInfo_s; } }
 }

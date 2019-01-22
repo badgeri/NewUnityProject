@@ -3,41 +3,43 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class Pathfinding : MonoBehaviour
+public class Pathfinding : NetworkBehaviour
 {
 
-	public Playground grid;
     public Material playerLocator;
     public Material targetLocator;
+    public static GameObject player_canvas = null; //static since it is not updated over network and can be controlled locally.
+    public static GameObject target_canvas = null; //static since it is not updated over network and can be controlled locally.
 
+	private Playground grid;
     private float mMaxVelocity = 10f;
     private float mCurrentVelocity = 0;
-    private Vector3 dirToFirstNodeInPath = new Vector3();
     private Vector3 targetPosition = new Vector3();
+    private Vector3 mPathDir = new Vector3(); //Keep track of travle direction, used when there's only one node left in path
     private bool isOrderedToMove = false;
-    private LayerMask notGroundMask = 0;
-    private bool objectIsSelected = false;
-    private bool isAllowedToMove = false;
-    public GameObject player_canvas = null;
-    public GameObject target_canvas = null;
-    private static int selectedOwner = 0;
+    private bool objectIsSelected = false; // not static since there has to be a uniq for each gameObject with PathFinding
+    private bool isAllowedToMove = false; // not static since there has to be a uniq for each gameObject with PathFinding
+    private static int selectedOwner = 0; //static since it is not updated over network and can be controlled locally.
 
     //private GameObject relatedPlayerConnectionObject;
+    private void Awake()
+    {
+        ExtendLayerMask.Update();
+    }
 
     // Use this for initialization
     void Start()
     {
-        // Remember: Update runs on everyones computer, whether or not they own this particular player object.
         grid = GameObject.FindWithTag("Playground").GetComponent<Playground>();
-        notGroundMask = 1 << ExtendLayerMask.UI | 1 << ExtendLayerMask.UnWalkable;
-        if (target_canvas == null && player_canvas == null)
+        // Remember: Update runs on everyones computer, whether or not they own this particular player object.
+        if (hasAuthority && target_canvas == null && player_canvas == null)
         {
             GameObject parent = new GameObject();
             parent.name = "LocaterCanvases";
-            target_canvas = createLocator(parent, targetLocator);
-            player_canvas = createLocator(parent, playerLocator);
-            setActivePlayerLocator(false);
-            setActiveTargetLocator(Vector3.zero, false);
+            target_canvas = CreateLocator(parent, targetLocator);
+            player_canvas = CreateLocator(parent, playerLocator);
+            SetActivePlayerLocator(false);
+            SetActiveTargetLocator(Vector3.zero, false);
         }
     }
 
@@ -49,6 +51,7 @@ public class Pathfinding : MonoBehaviour
         }
 
         // Remember: Update runs on everyones computer, whether or not they own this particular player object.
+        if (!hasAuthority) return;
         if (GetComponent<NetworkIdentity>() != null)
         {
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
@@ -69,11 +72,11 @@ public class Pathfinding : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {
             if (IsOwner())
             {
-                if (selectedObject())
+                if (SelectedObject())
                 {
                     if (isAllowedToMove)
                     {
-                        Vector3? tmp = getPositionFromMouseClick();
+                        Vector3? tmp = GetPositionFromMouseClick();
                         if (tmp.HasValue) // check if it is a double click on same
                         {
                             Node n1 = grid.NodeFromWorldPoint(tmp.Value);
@@ -87,7 +90,7 @@ public class Pathfinding : MonoBehaviour
                                 targetPosition = tmp.Value;
                                 isOrderedToMove = false;
                                 FindPath(transform.position, targetPosition);
-                                setActiveTargetLocator(targetPosition, true);
+                                SetActiveTargetLocator(targetPosition, true);
                             }
                         }
                     }
@@ -97,21 +100,21 @@ public class Pathfinding : MonoBehaviour
                         if (isAllowedToMove)
                         {
                             FindPath(transform.position, targetPosition);
-                            setActiveTargetLocator(targetPosition, true);
+                            SetActiveTargetLocator(targetPosition, true);
                         }
                     }
                 }
                 else
                 {
-                    setActiveTargetLocator(Vector3.zero, false);
+                    SetActiveTargetLocator(Vector3.zero, false);
                     isAllowedToMove = false;
                     isOrderedToMove = false;
                 }
             }
             else
             {
-                selectedObject(); // to select object first
-                setActiveTargetLocator(Vector3.zero, false);
+                SelectedObject(); // to select object first
+                SetActiveTargetLocator(Vector3.zero, false);
                 isAllowedToMove = false;
                 isOrderedToMove = false;
             }
@@ -127,17 +130,15 @@ public class Pathfinding : MonoBehaviour
         //if we have a grid path
         if (grid.path != null && isOrderedToMove && IsOwner())
         {
-            UpdateTravelDirection(grid.path);
-
             if (grid.path.Count > 0)
             {
-                CalculateAndUpdateVelocity(dirToFirstNodeInPath);
+                CalculateAndUpdateVelocity();
             }
             else
             {
                 GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
                 isOrderedToMove = false;
-                setActiveTargetLocator(Vector3.zero, false);
+                SetActiveTargetLocator(Vector3.zero, false);
             }
         }
         else if (GetComponent<Rigidbody>().velocity.magnitude > 0)
@@ -219,12 +220,14 @@ public class Pathfinding : MonoBehaviour
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    private Vector3 mPathDir = new Vector3();
-    private float fTextLabelHeight = 10f;
-
-    private void UpdateTravelDirection(List<Node> path)
+    private void UpdateTravelDirection(List<Node> path, out Vector3 dirToFirstNodeInPath)
     {
-        if (path.Count == 0) return;
+
+        if (path.Count == 0)
+        {
+            dirToFirstNodeInPath = Vector3.zero;
+            return;
+        }
 
         //TODO ether shoot a ray from transform.position to the grid to 
         //     get the proper y value, or make sure that the gameObjects 
@@ -251,7 +254,7 @@ public class Pathfinding : MonoBehaviour
         if ( Vector3.Dot(dirToFirstNodeInPath, mPathDir) < 0)
         {
             path.RemoveAt(0);
-            UpdateTravelDirection(path);
+            UpdateTravelDirection(path, out dirToFirstNodeInPath);
         }
     }
 
@@ -260,13 +263,13 @@ public class Pathfinding : MonoBehaviour
     /// </summary>
     /// <param name="direction"></param>
     /// <returns></returns>
-    private void getDirectionToNode(ref Vector3 direction, Node node)
+    private void GetDirectionToNode(ref Vector3 direction, Node node)
     {
         direction = node.worldPosition - transform.position;
         direction.Normalize();
     }
 
-    private GameObject createLocator(GameObject parent, Material material)
+    private GameObject CreateLocator(GameObject parent, Material material)
     {
         string objectName = "CircularCanvas" + material;
 
@@ -317,7 +320,7 @@ public class Pathfinding : MonoBehaviour
         return g;
     }
 
-    private void setActiveTargetLocator(Vector3 pos, bool active)
+    private void SetActiveTargetLocator(Vector3 pos, bool active)
     {
         if (target_canvas == null) return;
         if (selectedOwner == transform.GetInstanceID())
@@ -329,7 +332,7 @@ public class Pathfinding : MonoBehaviour
             target_canvas.SetActive(false);
     }
 
-    private void setActivePlayerLocator(bool active)
+    private void SetActivePlayerLocator(bool active)
     {
         if (player_canvas == null) return; //sanity
         if (selectedOwner == transform.GetInstanceID())
@@ -343,12 +346,12 @@ public class Pathfinding : MonoBehaviour
             
     }
 
-    private bool selectedObject()
+    private bool SelectedObject()
     {
         //If the ray hits an object or hitInfo is up to date
         if (RaycastHandler.Update())
         {
-            if (RaycastHandler.hitInfo.transform.gameObject == gameObject)
+            if (RaycastHandler.HitInfo.transform.gameObject == gameObject)
             {
                 // if same object is select, toggle if it is selected
                 objectIsSelected = !objectIsSelected;
@@ -357,9 +360,9 @@ public class Pathfinding : MonoBehaviour
                     selectedOwner = transform.GetInstanceID();
                 else selectedOwner = 0;
 
-                setActivePlayerLocator(objectIsSelected);
+                SetActivePlayerLocator(objectIsSelected);
             }
-            else if (RaycastHandler.hitInfo.transform.gameObject.GetComponent<Pathfinding>())
+            else if (RaycastHandler.HitInfo.transform.gameObject.GetComponent<Pathfinding>())
             {
                 //hit another object with pathfinding, unselect the selected object
                 objectIsSelected = false;
@@ -368,13 +371,13 @@ public class Pathfinding : MonoBehaviour
         return objectIsSelected;
     }
     
-    private Vector3? getPositionFromMouseClick()
+    private Vector3? GetPositionFromMouseClick()
     {
         if (RaycastHandler.Update())
         {
-            if (((1 << RaycastHandler.hitInfo.transform.gameObject.layer) & notGroundMask) == 0)
+            if (ExtendLayerMask.NotGroundMask(RaycastHandler.HitInfo.transform.gameObject.layer))
             {
-                return RaycastHandler.hitInfo.point;
+                return RaycastHandler.HitInfo.point;
             }
         }
         return null;
@@ -384,9 +387,9 @@ public class Pathfinding : MonoBehaviour
         //If the ray hits an object
         if (RaycastHandler.Update())
         {
-            if (((1 << RaycastHandler.hitInfo.transform.gameObject.layer) & notGroundMask) == 0)
+            if (ExtendLayerMask.NotGroundMask(RaycastHandler.HitInfo.transform.gameObject.layer))
             {
-                targetPosition = RaycastHandler.hitInfo.point;
+                targetPosition = RaycastHandler.HitInfo.point;
                 return true;
             }
         }
@@ -398,16 +401,14 @@ public class Pathfinding : MonoBehaviour
     /// </summary>
     /// <param name="direction"></param>
     /// <returns></returns>
-    private bool getDirectionOfMouseClick(ref Vector3 direction)
+    private bool GetDirectionOfMouseClick(ref Vector3 direction)
     {
         if (Input.GetMouseButtonDown(0))
         {
-            RaycastHit hit;
-            //If the ray hits an object
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
+            if (RaycastHandler.Update())
             {
-                Vector3 g = hit.point;
-                var heading = hit.point - transform.position;
+                Vector3 g = RaycastHandler.HitInfo.point;
+                var heading = RaycastHandler.HitInfo.point - transform.position;
                 var distance = heading.magnitude;
                 direction = heading / distance;
                 return true;
@@ -420,8 +421,10 @@ public class Pathfinding : MonoBehaviour
     /// Calculate and update velocity based on a direction.
     /// </summary>
     /// <param name="direction"></param>
-    private void CalculateAndUpdateVelocity(Vector3 direction)
+    private void CalculateAndUpdateVelocity()
     {
+        Vector3 direction;
+        UpdateTravelDirection(grid.path, out direction);
         Rigidbody rb = GetComponent<Rigidbody>();
         mCurrentVelocity = Mathf.Min(rb.velocity.magnitude + 3, mMaxVelocity);
         float angle = Mathf.Atan2(direction.z, direction.x);

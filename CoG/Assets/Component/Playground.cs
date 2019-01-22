@@ -92,7 +92,7 @@ public class Playground : MonoBehaviour {
 
         //Do not need to update grid if the object is walkable
         if ((1 << movedObject.layer & unWalkableMask) == 0 &&
-            movedObject.layer != ExtendLayerMask.GhostMask
+            movedObject.layer != ExtendLayerMask.GhostMask()
             )
             return;
         gridUpdated = true;
@@ -213,7 +213,7 @@ public class Playground : MonoBehaviour {
             {
                 isItself = true;
                 // if there was only a collision with Ghost, it is not a collision
-                if (gameObject.layer == ExtendLayerMask.GhostMask)
+                if (gameObject.layer == ExtendLayerMask.GhostMask())
                 {
                     return hitInfos.Length > 1;
                 }
